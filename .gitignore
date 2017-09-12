@@ -1,0 +1,7 @@
+generated
+intermediates
+outputs
+build
+.idea
+.gradle
+*.iml

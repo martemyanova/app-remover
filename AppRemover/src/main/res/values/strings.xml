@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- Application title. How it displayed in application list -->
+    <string name="app_name">Unused App Remover</string>
+    <!-- Name of dropdown menu "Order by" -->
+    <string name="menu_sort">Order by</string>
+	<!-- Share application via social network -->
+    <string name="menu_share">Share</string>
+    
+	<!-- Remove application from device  -->
+    <string name="action_remove">Remove</string>
+	<!-- Launch application -->
+    <string name="action_launch">Launch</string>
+	<!-- View application description in google play market -->
+    <string name="action_open_in_play_store">Additional\ninfo</string>
+	<!-- Do not notify to remove application from device -->
+    <string name="action_dont_notify">Don\'t\nnotify</string>
+        
+	<!-- Menu header. Order [by something]. See variants below -->
+    <string name="order_by">Order</string>
+	<!-- [Order applications] by time (selected menu item, shown in action bar) -->
+    <string name="order_by_time_unused_action_bar">by time</string>
+	<!-- [Order applications] by time unused (menu item name, shown in menu) -->
+    <string name="order_by_time_unused_menu">by time unused</string>
+	<!-- [Order applications] by name (selected menu item, shown in action bar) -->
+    <string name="order_by_name_action_bar">by name</string>
+	<!-- [Order applications] by name (menu item name, shown in menu) -->
+    <string name="order_by_name_menu">by name</string>
+	<!-- [Order applications] by size (selected menu item, shown in action bar) -->
+    <string name="order_by_size_action_bar">by size</string>
+	<!-- [Order applications] by size (menu item name, shown in menu) -->
+    <string name="order_by_size_menu">by size</string>
+    
+	<!-- Applications, installed on phone/tablet. Such applications called "Downloaded" in Android -->
+    <string name="title_downloaded_applications">Downloaded</string>
+	<!-- Applications, that unused more than 7 days -->
+    <string name="title_unused_applications">Unused</string>    
+	<!-- Common title for applications screen. used like this: Applications [by name] etc. -->
+    <string name="title_activity_applications">Applications</string>
+    
+    <string name="admob_unit_id">a150e556c308d13</string>
+
+	<!-- My application is just installed. And haven't notices anther application running. -->
+	<string name="havent_seen_app_running">Haven\'t seen it running</string>
+	<!-- Havent noticed application is running, during observation period -->
+	<string name="unused_at_least_X">Unused at least\n%1$s</string>
+	
+	<!-- Notification header. Unused apps found. Where apps substituted from plural applications form. -->
+	<string name="notification_unused_header">Unused %1$s found</string>
+	<!-- Notification body id consumed size known. 10 apps consuming 163Mb. Where %1$d and %3$s is quantity and size. And apps is substituted from app plurals -->
+	<string name="notification_unused_apps_consuming">%1$d %2$s consuming %3$s</string>
+	<!-- Notification body id consumed size unknown. Example: 10 apps. (see apps plural) -->
+	<string name="notification_unused_apps">%1$d %2$s</string>
+	
+	<!-- Unknown size of application. Used instead 11Mb, for example, when size is not determined-->
+	<string name="app_size_unknown">Unknown</string>
+	
+	<!-- On the unused apps screen. Tells to user, that my application is looking for unused applications now -->
+	<string name="unused_empty_monitoring_apps">Monitoring applications activity to learn which are unused</string>
+	<!-- This program will notify, when unused applications will be found -->
+	<string name="unused_empty_will_notify">I will notify you when unused applications will be found</string>
+	
+	<!-- Android toast message. Shown when application can't be launched directly. -->
+	<string name="toast_cant_launch_app">Sorry, can\'t launch this application</string>
+	<!-- Android toast message. Shown, when user sets "don't notify" mark". Will not prompt 
+	user to remove application if it appears to be unused-->
+	<string name="toast_dont_notify">Will not notify you about this application</string>
+	
+	<!-- plural - work forms for different quantities.
+	For example: one minute, few - minutes, many - minutes, other - 3.5 minutes -->
+	
+	<!-- Plural forms of abbreviated word "application" -->
+	<plurals name="application_count">
+		<item quantity="one">app</item>
+		<item quantity="other">apps</item>
+	</plurals>
+	
+	<!-- Plural forms of abbreviated word "minute". Example: 1min, 5mins -->
+	<plurals name="minute_count">
+		<item quantity="one">%1$dmin</item>
+		<item quantity="other">%1$dmins</item>
+	</plurals>
+	
+	<!-- Plural forms of abbreviated word "hour". Example: 1hr, 5hrs -->
+	<plurals name="hour_count">
+		<item quantity="one">%1$dhr</item>
+		<item quantity="other">%1$dhrs</item>
+	</plurals>
+	
+	<!-- Plural forms of word "day". Example: 1 day, 5 days -->
+	<plurals name="day_count">
+		<item quantity="one">%1$d day</item>
+		<item quantity="other">%1$d days</item>
+	</plurals>
+	
+	<!-- Offer user to rate this application on google play -->	
+	<!-- Rate dialog message -->
+	<string name="dialog_rate_this_message">Would you mind to spend a minute to rate this application?</string>
+    <!-- and 2 buttons below: [yes] [no]-->
+
+    <string name="ran_in_background_X_ago">Ran in background\n%1$s ago</string>
+    <string name="used_by_user_X_ago">Used\n%1$s ago</string>
+    <string name="ran_in_background_just">Just\nran in background</string>
+    <string name="used_just">Just\nused</string>
+    <string name="ran_in_background_today">Ran in background\ntoday</string>
+    <string name="used_today">Used\ntoday</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
+    <string name="request_permission">I need your permission to gather apps usage statistics</string>
+</resources>

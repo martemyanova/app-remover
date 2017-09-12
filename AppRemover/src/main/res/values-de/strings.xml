@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">Ungenutzte Apps Entferner</string>
+
+	<string name="menu_sort">Sortieren nach</string>
+	<string name="menu_share">App teilen</string>
+
+	<string name="action_remove">Deinstallieren</string>
+	<string name="action_launch">Ausführen</string>
+	<!-- May you shoul change it to "Im Play Store \nöffnen" if their is enough space -->
+	<string name="action_open_in_play_store">Mehr\nInfos</string>
+	<string name="action_dont_notify">Nicht mehr be-\nnachrichtigen</string>
+
+	<string name="order_by">Sortieren</string>
+	<string name="order_by_time_unused_action_bar">nach Zeit</string>
+	<string name="order_by_time_unused_menu">nach ungenutzter Zeit</string>
+	<string name="order_by_name_action_bar">nach Namen</string>
+	<string name="order_by_name_menu">nach Namen</string>
+	<string name="order_by_size_action_bar">nach Größe</string>
+	<string name="order_by_size_menu">nach Größe</string>
+
+	<string name="title_downloaded_applications">Heruntergeladene Apps</string>
+	<string name="title_unused_applications">Ungenutzte Apps</string>
+	<!-- Apps is more common word in Germany then Anwendungen, but you can still use it -->
+	<string name="title_activity_applications">Apps</string>
+
+	<string name="admob_unit_id">a150e556c308d13</string>
+
+	<string name="havent_seen_app_running">Seit Installation dieser\nApp nicht mehr ausgeführt</string>
+	<string name="unused_at_least_X">Nicht ausgeführt seit mindestens %1$s</string>
+
+	<string name="notification_unused_header">Nicht genutzte %1$s gefunden</string>
+	<string name="notification_unused_apps_consuming">%1$d %2$s beanspruchen %3$s</string>
+	<string name="notification_unused_apps">%1$d %2$s</string>
+
+	<string name="app_size_unknown">Unbekannt</string>
+
+	<string name="unused_empty_monitoring_apps">Die App-Aktivität wird überwacht,\num ungenutzte Anwendungen aufzuspüren</string>
+	<string name="unused_empty_will_notify">Sie werden über nicht mehr verwendete Apps benachrichtigt</string>
+
+	<string name="toast_cant_launch_app">Die App kann leider nicht geöffnet werden</string>
+	<string name="toast_dont_notify">Für diese App keine Benachrichtigungen mehr erhalten</string>
+
+	<plurals name="application_count">
+		<!-- Anwendung -->
+		<item quantity="one">App</item>
+		<!-- Anwendungen -->
+		<item quantity="other">Apps</item>
+	</plurals>
+
+	<plurals name="minute_count">
+		<item quantity="one">%1$d Minute</item>
+		<item quantity="other">%1$d Minuten</item>
+	</plurals>
+
+	<plurals name="hour_count">
+		<item quantity="one">%1$d Stunde</item>
+		<item quantity="other">%1$d Stunden</item>
+	</plurals>
+
+	<plurals name="day_count">
+		<item quantity="one">%1$d Tag</item>
+		<item quantity="other">%1$d Tagen</item>
+	</plurals>
+
+	<string name="dialog_rate_this_message">Wenn Ihnen diese App gefällt, nehmen Sie sich doch bitte einen Moment Zeit für eine Bewertung. Vielen Dank für Ihre Unterstützung!</string>
+
+	<string name="ran_in_background_X_ago">Vor %1$s im\nHintergrund ausgeführt</string>
+	<string name="used_by_user_X_ago">Ausgeführt vor\n%1$s</string>
+	<string name="ran_in_background_just">Soeben im \nHintergrund ausgeführt</string>
+	<string name="used_just">Soeben ausgeführt</string>
+	<string name="ran_in_background_today">Heute im \nHintergrund ausgeführt</string>
+	<string name="used_today">Heute ausgeführt</string>
+	<string name="allow">Erlauben</string>
+	<string name="deny">Verweigern</string>
+	<string name="request_permission">Darf diese Anwendung Nutzungsstatistiken Ihrer Apps sammeln?</string>
+</resources>

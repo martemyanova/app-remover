@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Неиспользуемые приложения</string>
+            
+    <string name="menu_sort">Сортировать по</string>
+    <string name="menu_share">Поделиться</string>
+    
+    <string name="action_remove">Удалить</string>
+    <string name="action_launch">Запус-\nтить</string>
+    <string name="action_open_in_play_store">Дополни-\nтельно</string>
+    <string name="action_dont_notify">Не напо-\nминать</string>
+        
+    <string name="order_by">Сортировать по</string>
+    <string name="order_by_time_unused_action_bar">по времени</string>
+    <string name="order_by_time_unused_menu">времени не использовалось</string>
+    <string name="order_by_name_action_bar">по имени</string>
+    <string name="order_by_name_menu">имени</string>
+    <string name="order_by_size_action_bar">по размеру</string>
+    <string name="order_by_size_menu">размеру</string>
+    
+    <string name="title_downloaded_applications">Установленные</string>
+    <string name="title_unused_applications">Неиспользуемые</string>    
+    <string name="title_activity_applications">Приложения</string>
+    
+	<string name="admob_unit_id">a150e556c308d13</string>
+
+	<string name="havent_seen_app_running">Не замечено запущенным</string>
+	<string name="unused_at_least_X">Не запускалось\n%1$s</string>
+		
+	<string name="notification_unused_header">Найдены неиспользуемые приложения</string>
+	<string name="notification_unused_apps_consuming">%1$d %2$s, на %3$s</string>
+	<string name="notification_unused_apps">%1$d %2$s</string>
+	
+	<string name="app_size_unknown">Нет данных</string>
+	
+	<string name="unused_empty_monitoring_apps">Отслеживаю активность приложений, чтобы узнать какие не используются</string>
+	<string name="unused_empty_will_notify">Вы получите нотификацию, когда будут определены неиспользуемые приложения</string>
+	
+	<string name="toast_cant_launch_app">Извини, не получилось запустить приложение</string>
+	<string name="toast_dont_notify">Не напоминать об удалении этого приложения</string>
+	
+	<plurals name="application_count">
+		<item quantity="one">приложение</item>
+		<item quantity="few">приложения</item>
+		<item quantity="many">приложений</item>
+		<item quantity="other">приложения</item>
+	</plurals>
+	
+	<plurals name="minute_count">
+		<item quantity="one">%1$d минуту</item>
+		<item quantity="few">%1$d минуты</item>
+		<item quantity="many">%1$d минут</item>
+		<item quantity="other">%1$d минут</item>
+	</plurals>
+	
+	<plurals name="hour_count">
+		<item quantity="one">%1$d час</item>
+		<item quantity="few">%1$d часа</item>
+		<item quantity="many">%1$d часов</item>
+		<item quantity="other">%1$d часов</item>
+	</plurals>
+	
+	<plurals name="day_count">
+		<item quantity="one">%1$d день</item>
+		<item quantity="few">%1$d дня</item>
+		<item quantity="many">%1$d дней</item>
+		<item quantity="other">%1$d дней</item>
+	</plurals>
+		
+	<string name="dialog_rate_this_message">Не найдется ли у Вас минутка, чтобы ценить это приложение?</string>
+
+    <string name="ran_in_background_X_ago">Запускалось в фоне\n%1$s назад</string>
+    <string name="used_by_user_X_ago">Использовалось\n%1$s назад</string>
+    <string name="ran_in_background_just">Запускалось в фоне\nтолько что</string>
+    <string name="used_just">Использовалось\nтолько что</string>
+    <string name="ran_in_background_today">Запускалось в фоне\nсегодня</string>
+    <string name="used_today">Использовалось\nсегодня</string>
+    <string name="allow">Разрешить</string>
+    <string name="deny">Отмена</string>
+    <string name="request_permission">Требуется ваше разрешение, чтобы собирать статистику использования приложений</string>
+</resources>

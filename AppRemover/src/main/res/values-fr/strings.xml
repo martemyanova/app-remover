@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Demande Remover utilisé</string>
+            
+    <string name="menu_sort">Trier par</string>
+    <string name="menu_share">Part</string>
+    
+    <string name="action_remove">Enlever</string>
+    <string name="action_launch">Lancer</string>
+    <string name="action_open_in_play_store">Info com-\nplémentaires</string>
+	<string name="action_dont_notify">Ne pas\nnotifier</string>
+        
+    <string name="order_by">Ordre</string>
+    <string name="order_by_time_unused_action_bar">par heure</string>
+    <string name="order_by_time_unused_menu">par temps inutilisé</string>
+    <string name="order_by_name_action_bar">nommément</string>
+    <string name="order_by_name_menu">nommément</string>
+    <string name="order_by_size_action_bar">par taille</string>
+    <string name="order_by_size_menu">par taille</string>
+    
+    <string name="title_downloaded_applications">Téléchargé</string>
+    <string name="title_unused_applications">Inutilisé</string>    
+    <string name="title_activity_applications">Applications</string>
+    
+	<string name="admob_unit_id">a150e556c308d13</string>
+
+	<string name="havent_seen_app_running">Je n\'ai pas vu utilisé</string>
+	<string name="unused_at_least_X">Inutilisées au moins %1$s</string>
+		
+	<string name="notification_unused_header">Il ya les %1$s inutilisées</string>
+	<string name="notification_unused_apps_consuming">%1$d %2$s consomment %3$s</string>
+	<string name="notification_unused_apps">%1$d %2$s</string>
+	
+	<string name="app_size_unknown">Inconnu</string>
+	
+	<string name="unused_empty_monitoring_apps">Surveillance des applications activité d\'apprendre qui ne sont pas utilisés</string>
+	<string name="unused_empty_will_notify">Je vous aviserai lorsque les applications inutilisées seront trouvées</string>
+		
+	<string name="toast_cant_launch_app">Désolé, impossible de lancer cette application</string>
+	<string name="toast_dont_notify">Ne vous informer de cette application</string>
+	
+	<plurals name="application_count">
+		<item quantity="one">application</item>
+		<item quantity="other">applications</item>
+	</plurals>
+	
+	<plurals name="minute_count">
+		<item quantity="one">%1$d minute</item>
+		<item quantity="other">%1$d minutes</item>
+	</plurals>
+	
+	<plurals name="hour_count">
+		<item quantity="one">%1$d heure</item>
+		<item quantity="other">%1$d heures</item>
+	</plurals>
+	
+	<plurals name="day_count">
+		<item quantity="one">%1$d jour</item>
+		<item quantity="other">%1$d jours</item>
+	</plurals>
+		
+	<string name="dialog_rate_this_message">Avez-vous une minute à la note de cette application?</string>
+
+    <string name="ran_in_background_X_ago">Ran in background\n%1$s ago</string>
+    <string name="used_by_user_X_ago">Utilisé\nil ya %1$s</string>
+    <string name="ran_in_background_just">Just\nran in background</string>
+    <string name="used_just">Juste\nutilisé</string>
+    <string name="ran_in_background_today">Ran in background\ntoday</string>
+    <string name="used_today">Utilisé\naujourd\'hui</string>
+    <string name="allow">Permettre</string>
+    <string name="deny">Nier</string>
+    <string name="request_permission">Je ai besoin de votre permission de recueillir des statistiques d\'utilisation des applications</string>
+</resources>

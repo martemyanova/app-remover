@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    defaultConfig {
+        applicationId "com.vs_unusedappremover"
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 7
+        versionName "1.4.2"
+    }
+
+    signingConfigs {
+        def password = 'yourpass'
+        release {
+            storeFile file('android-release-key.keystore')
+            storePassword password
+            keyAlias 'vasiliy'
+            keyPassword password
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.google.android.gms:play-services:9.2.1'
+    compile 'com.google.guava:guava:14.0.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+}

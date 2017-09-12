@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ListView 
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+        android:divider="@android:drawable/divider_horizontal_bright"/>
+    
+    <LinearLayout 
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"        
+        android:paddingLeft="40dip"
+        android:paddingRight="40dip"
+        android:gravity="center"
+        android:background="#e2e2e2">
+        
+        <TextView 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:paddingBottom="20dp"
+        	android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/abc_primary_text_material_light"
+        	android:gravity="center_horizontal"        	
+        	android:text="@string/unused_empty_monitoring_apps"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/abc_secondary_text_material_light"
+        	android:gravity="center_horizontal"
+        	android:text="@string/unused_empty_will_notify"/>
+        
+    </LinearLayout>
+</LinearLayout>

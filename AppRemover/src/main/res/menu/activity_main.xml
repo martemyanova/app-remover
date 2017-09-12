@@ -1,0 +1,16 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_sort"
+        app:showAsAction="always"
+        android:title="@string/menu_sort"
+        app:actionProviderClass="com.vs_unusedappremover.actions.SortActionProvider">
+     </item>   
+    
+    <item
+        android:id="@+id/menu_share"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_share"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
+</menu>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?attr/selectableItemBackground"
+              android:minHeight="?android:attr/listPreferredItemHeight"
+              android:orientation="horizontal"
+              android:paddingBottom="6dip"
+              android:paddingLeft="15dip"
+              android:paddingRight="?android:attr/scrollbarSize"
+              android:paddingTop="6dip">
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_gravity="top"
+        android:layout_marginRight="15dip"
+        android:layout_marginTop="4dip"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"/>
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dip"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"
+            tools:text="Play Market"/>
+
+        <TextView
+            android:id="@+id/app_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="756KB"/>
+
+        <TextView
+            android:id="@+id/app_last_used"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:ellipsize="marquee"
+            android:lines="2"
+            android:paddingBottom="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Ran in background\nminutes ago"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/app_dont_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingTop="2dp"
+        android:src="@drawable/ic_do_not_disturb_black_24dp"/>
+</LinearLayout>
