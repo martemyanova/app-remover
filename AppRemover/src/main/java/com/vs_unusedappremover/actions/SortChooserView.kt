@@ -46,6 +46,8 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
 
     private var mIsAttachedToWindow: Boolean = false
 
+    private val onButtonClick = OnClickListener { showPopupUnchecked() }
+
     init {
 
         val inflater = LayoutInflater.from(mContext)
@@ -164,7 +166,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
                 mListPopupWindow!!.setOnItemClickListener(onItemClick)
                 mListPopupWindow!!.setOnDismissListener(onPopupDismissed)
             }
-            return mListPopupWindow
+            return mListPopupWindow as ListPopupWindow
         }
 
     private fun measureContentWidth(adapter: BaseAdapter?): Int {
@@ -194,8 +196,6 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
         }
         dismissPopup()
     }
-
-    private val onButtonClick = OnClickListener { showPopupUnchecked() }
 
     private val onPopupDismissed = PopupWindow.OnDismissListener {
         setTextResource(mProvider!!.order.shortTextResId)

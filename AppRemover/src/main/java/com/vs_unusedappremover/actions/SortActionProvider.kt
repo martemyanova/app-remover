@@ -13,15 +13,17 @@ import android.widget.TextView
 import com.vs_unusedappremover.R
 import com.vs_unusedappremover.data.OrderBy
 
-class SortActionProvider(private val context: Context) : ActionProvider(context) {
 
-    interface OnSortSelectedListener {
-        fun onSortSelected(source: SortActionProvider, order: OrderBy)
-    }
+typealias OnSortSelectedListener = (source: SortActionProvider, order: OrderBy) -> Unit
+
+class SortActionProvider(context: Context) : ActionProvider(context) {
 
     private val adapter: SortActionAdapter
     private var listener: OnSortSelectedListener? = null
-    private var order = OrderBy.TIME_UNUSED
+    var order = OrderBy.TIME_UNUSED
+        set(value) {
+            field = value
+        }
 
     init {
         this.adapter = SortActionAdapter(context)
@@ -38,24 +40,13 @@ class SortActionProvider(private val context: Context) : ActionProvider(context)
         return activityChooserView
     }
 
-    fun setOrder(order: OrderBy?) {
-        assert(order != null)
-        this.order = order
-    }
-
-    fun getOrder(): OrderBy {
-        return order
-    }
-
     fun setOnSortSelectedListener(l: OnSortSelectedListener) {
         this.listener = l
     }
 
-    private val onItemClick = OnItemClickListener { parent, view, position, id ->
+    private val onItemClick = OnItemClickListener { _, _, position, _ ->
         order = adapter.getItem(position)
-        if (listener != null) {
-            listener!!.onSortSelected(this@SortActionProvider, order)
-        }
+        listener?.invoke(this@SortActionProvider, order)
     }
 
     class SortActionAdapter(private val context: Context) : BaseAdapter() {

@@ -58,7 +58,11 @@ class MonitorApplicationsService : Service() {
         }
 
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        onScreenStateChanged(pm.isScreenOn)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            onScreenStateChanged(pm.isInteractive)
+        } else {
+            onScreenStateChanged(pm.isScreenOn)
+        }
 
         Log.i(TAG, "service created")
     }
@@ -192,7 +196,7 @@ class MonitorApplicationsService : Service() {
 
     companion object {
 
-        private val TAG = MonitorApplicationsService::class.java!!.getSimpleName()
+        private val TAG = MonitorApplicationsService::class.java.getSimpleName()
         private val GET_FOREGROUND_APP_INTERVAL = 5 * MillisecondsIn.SECOND
         private val GET_RECENT_APPS_INTERVAL = 30 * MillisecondsIn.SECOND
     }

@@ -23,8 +23,8 @@ class RateThisAppDialog : DialogFragment() {
         return AlertDialog.Builder(context)
                 .setMessage(R.string.dialog_rate_this_message)
                 .setCancelable(true)
-                .setPositiveButton(android.R.string.yes) { dialog, which -> onYesClicked() }
-                .setNegativeButton(android.R.string.no) { dialog, which -> onNoClicked() }
+                .setPositiveButton(android.R.string.yes) { _, _ -> onYesClicked() }
+                .setNegativeButton(android.R.string.no) { _, _ -> onNoClicked() }
                 .setOnCancelListener { onNoClicked() }
                 .create()
     }
@@ -43,7 +43,7 @@ class RateThisAppDialog : DialogFragment() {
 
     companion object {
 
-        private val TAG = RateThisAppDialog::class.java!!.getSimpleName()
+        private val TAG = RateThisAppDialog::class.java.getSimpleName()
         private val SHOW_INTERVAL = 12
         private val REQUEST_COUNT = "num requests"
         private val IS_RATED = "is rated"

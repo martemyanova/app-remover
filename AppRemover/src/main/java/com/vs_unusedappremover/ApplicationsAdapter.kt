@@ -46,11 +46,11 @@ class ApplicationsAdapter(private val context: Context) : BaseAdapter() {
         return at.toLong()
     }
 
-    override fun getView(index: Int, convertView: View, parent: ViewGroup): View {
-        var convertView = convertView
-        val holder = ApplicationViewHolder.createOrReuse(context, convertView)
-        convertView = holder.rootView
-        val context = convertView.context
+    override fun getView(index: Int, convertView: View?, parent: ViewGroup): View {
+        var resultView = convertView
+        val holder = ApplicationViewHolder.createOrReuse(context, resultView)
+        resultView = holder.rootView
+        val context = resultView.context
 
         val entry = getItem(index)
         holder.appName.text = entry.label
@@ -68,14 +68,14 @@ class ApplicationsAdapter(private val context: Context) : BaseAdapter() {
 
         val lastUsedText: String
         val unusedTime = entry.lastUsedTime - System.currentTimeMillis()
-        if (entry.lastUsedTime != 0 || unusedTime < MillisecondsIn.DAY * 365 * 3) {
+        if (entry.lastUsedTime != 0L || unusedTime < MillisecondsIn.DAY * 365 * 3) {
             lastUsedText = elapsedTime.format(entry.lastUsedTime, entry.ranIn)
         } else {
             lastUsedText = unknownUsageTime.format(entry.installTime)
         }
         holder.lastUsed.text = lastUsedText
 
-        return convertView
+        return resultView
     }
 }
 
@@ -90,7 +90,7 @@ internal class ElapsedTimeFormatter(context: Context) {
     }
 
     fun format(lastUsed: Long, ranIn: AppEntry.RanIn?): String {
-        if (lastUsed == 0) return res.getString(R.string.havent_seen_app_running)
+        if (lastUsed == 0L) return res.getString(R.string.havent_seen_app_running)
 
         val now = System.currentTimeMillis()
         val diff = now - lastUsed
@@ -106,7 +106,6 @@ internal class ElapsedTimeFormatter(context: Context) {
         if (diff > 12 * MillisecondsIn.HOUR) {
             when (ranIn) {
                 AppEntry.RanIn.BACKGROUND -> return res.getString(R.string.ran_in_background_today)
-                AppEntry.RanIn.FOREGROUND,
                 else -> return res.getString(R.string.used_today)
             }
         }
@@ -123,17 +122,14 @@ internal class ElapsedTimeFormatter(context: Context) {
 
         when (ranIn) {
             AppEntry.RanIn.BACKGROUND -> return res.getString(R.string.ran_in_background_just)
-            AppEntry.RanIn.FOREGROUND,
             else -> return res.getString(R.string.used_just)
         }
     }
 
     private fun lastUsed(ranIn: AppEntry.RanIn?, unitsPluralId: Int, quantity: Int): String {
-        val ranInFormat: String
-        when (ranIn) {
-            AppEntry.RanIn.BACKGROUND -> ranInFormat = res.getString(R.string.ran_in_background_X_ago)
-            AppEntry.RanIn.FOREGROUND,
-            else -> ranInFormat = res.getString(R.string.used_by_user_X_ago)
+        val ranInFormat: String = when (ranIn) {
+            AppEntry.RanIn.BACKGROUND -> res.getString(R.string.ran_in_background_X_ago)
+            else -> res.getString(R.string.used_by_user_X_ago)
         }
         val timeLeft = pluralRes.format(unitsPluralId, quantity, quantity)
         return String.format(ranInFormat, timeLeft)

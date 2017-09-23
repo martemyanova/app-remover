@@ -71,7 +71,7 @@ class GAExceptionParser(context: Context, vararg additionalPackages: String) : E
     protected fun getCause(t: Throwable): Throwable {
         var result = t
         while (result.cause != null) {
-            result = result.cause
+            result = result.cause as Throwable
         }
         return result
     }

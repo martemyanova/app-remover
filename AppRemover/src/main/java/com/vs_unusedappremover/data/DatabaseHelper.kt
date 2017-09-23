@@ -23,15 +23,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             val SIZE = "size"
             val NOTIFY = "notify"
 
-            val CREATE = "create table $NAME (\n"
-            + PACKAGE + " text primary key, \n"
-            + TIME_LAST_USED + " int, \n"
-            + TIME_INSTALLED + " int, \n"
-            + DOWLOAD_COUNT + " text, \n"
-            + RATING + " real, \n"
-            + SIZE + " int, \n"
-            + NOTIFY + " int, \n"
-            + RAN_IN + " int); "
+            val CREATE = "create table $NAME (\n" +
+                PACKAGE + " text primary key, \n" +
+                TIME_LAST_USED + " int, \n" +
+                TIME_INSTALLED + " int, \n" +
+                DOWLOAD_COUNT + " text, \n" +
+                RATING + " real, \n" +
+                SIZE + " int, \n" +
+                NOTIFY + " int, \n" +
+                RAN_IN + " int); "
         }
     }
 
@@ -76,7 +76,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
 
-        private val TAG = DatabaseHelper::class.java!!.getSimpleName()
+        private val TAG = DatabaseHelper::class.java.getSimpleName()
         val DATABASE_NAME = "apps"
         val DATABASE_VERSION = 4
     }

@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class MyApplication : Application() {
 
     private var database: DatabaseHelper? = null
-    private val backgroundExecutor: ThreadPoolExecutor
+    val backgroundExecutor: ExecutorService
     var uiHandler: Handler? = null
         private set
     var applications: ApplicationCollection? = null
@@ -53,12 +53,8 @@ class MyApplication : Application() {
             if (database == null) {
                 database = DatabaseHelper(this)
             }
-            return database
+            return database as DatabaseHelper
         }
-
-    fun getBackgroundExecutor(): ExecutorService {
-        return backgroundExecutor
-    }
 
     val installTime: Long
         get() {
@@ -72,7 +68,7 @@ class MyApplication : Application() {
 
     private fun checkInstallTimePresent() {
         val prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE)
-        if (prefs.getLong(INSTALL_TIME, 0) == 0) {
+        if (prefs.getLong(INSTALL_TIME, 0) == 0L) {
             prefs.edit()
                     .putLong(INSTALL_TIME, calculateInstallTime())
                     .apply()
@@ -86,7 +82,7 @@ class MyApplication : Application() {
             val info = pm.getApplicationInfo(packageName, 0)
             val apk = File(info.sourceDir)
             val installTime = apk.lastModified()
-            return if (installTime != 0) installTime else now
+            return if (installTime != 0L) installTime else now
         } catch (e: NameNotFoundException) {
             return now
         }
@@ -95,7 +91,7 @@ class MyApplication : Application() {
 
     companion object {
 
-        val TAG = MyApplication::class.java!!.getSimpleName()
+        val TAG = MyApplication::class.java.getSimpleName()
         private val INSTALL_TIME = "install time"
 
         var instance: MyApplication? = null

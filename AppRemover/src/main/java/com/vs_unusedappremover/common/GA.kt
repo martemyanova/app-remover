@@ -17,7 +17,7 @@ object GA {
     private var sTracker: EasyTracker? = null
     private var exceptionParser: ExceptionParser? = null
 
-    fun init(resourcesPackage: String, context: Context, vararg additionalPackages: String) {
+    fun init(resourcesPackage: String?, context: Context, vararg additionalPackages: String) {
         EasyTracker.setResourcePackageName(resourcesPackage)
         sTracker = EasyTracker.getInstance(context)
         exceptionParser = GAExceptionParser(context, *additionalPackages)

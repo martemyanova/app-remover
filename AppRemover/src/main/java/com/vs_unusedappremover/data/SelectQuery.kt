@@ -15,7 +15,7 @@ class SelectQuery {
     private var orderBy: String? = null
 
     fun select(vararg columns: String): SelectQuery {
-        this.columns = columns
+        this.columns = Array(columns.size, { i -> columns[i]})
         return this
     }
 
@@ -31,10 +31,7 @@ class SelectQuery {
 
     fun where(condition: String, vararg args: Any): SelectQuery {
         this.selection = condition
-        selectArgs = arrayOfNulls(args.size)
-        for (i in args.indices) {
-            selectArgs[i] = if (args[i] != null) args[i].toString() else null
-        }
+        selectArgs = Array(args.size, {i -> args[i].toString()})
         return this
     }
 

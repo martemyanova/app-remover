@@ -2,7 +2,7 @@ package com.vs_unusedappremover.common
 
 class AsyncResult<T> {
 
-    private val waitMonitor = Any()
+    private val waitMonitor = java.lang.Object()
     private var result: T? = null
     private var hasResult: Boolean = false
 

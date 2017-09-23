@@ -18,9 +18,9 @@ import android.util.Log
 
 object UnusedAppsNotification {
 
-    private val TAG = UnusedAppsNotification::class.java!!.getSimpleName()
+    private val TAG = UnusedAppsNotification::class.java.getSimpleName()
 
-    private val PREFERENCES = UnusedAppsNotification::class.java!!.getName()
+    private val PREFERENCES = UnusedAppsNotification::class.java.getName()
     private val SETTING_LAST_SHOWN = "last shown"
     private val SHOW_INTERVAL_MILLIS = MillisecondsIn.HOUR * 36
 
@@ -37,7 +37,7 @@ object UnusedAppsNotification {
         title = first + title.substring(1)
 
         val text: String
-        if (unusedSize != 0) {
+        if (unusedSize != 0L) {
             val size = Formatter.formatFileSize(context, unusedSize)
             text = format(res, R.string.notification_unused_apps_consuming, unusedCount, apps, size)
         } else {

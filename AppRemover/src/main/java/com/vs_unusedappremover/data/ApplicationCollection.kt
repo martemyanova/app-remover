@@ -217,10 +217,10 @@ class ApplicationCollection(private val context: Context) {
 
         override fun run() {
             val apk = File(entryToFill.info!!.sourceDir)
-            val size = PackageSize.get(pm, entryToFill.info)
+            val size = PackageSize.get(pm, entryToFill.info as ApplicationInfo)
             val packageName = entryToFill.info!!.packageName
             val label = if (apk.exists()) entryToFill.info!!.loadLabel(pm).toString() else packageName
-            val installTime = if (entryToFill.installTime == 0) getFirstInstallTime(packageName) else entryToFill.installTime
+            val installTime = if (entryToFill.installTime == 0L) getFirstInstallTime(packageName) else entryToFill.installTime
 
             if (size != entryToFill.size ||
                     label != entryToFill.label ||
@@ -274,7 +274,7 @@ class ApplicationCollection(private val context: Context) {
 
     companion object {
 
-        private val TAG = ApplicationCollection::class.java!!.getSimpleName()
+        private val TAG = ApplicationCollection::class.java.getSimpleName()
         private val NOTIFY_UPDATED_INTERVAL: Long = 500
     }
 }

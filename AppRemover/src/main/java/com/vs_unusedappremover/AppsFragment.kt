@@ -1,10 +1,7 @@
 package com.vs_unusedappremover
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
-import android.content.res.Resources
 import android.database.DataSetObserver
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -18,18 +15,15 @@ import android.support.v4.app.ListFragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.ShareActionProvider
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ListView
 import android.widget.Toast
+import com.vs_unusedappremover.actions.OnSortSelectedListener
 
 import com.vs_unusedappremover.actions.SortActionProvider
 import com.vs_unusedappremover.common.GA
@@ -37,7 +31,6 @@ import com.vs_unusedappremover.data.ApplicationCollection
 import com.vs_unusedappremover.data.Applications
 import com.vs_unusedappremover.data.Applications.Filter
 import com.vs_unusedappremover.data.OrderBy
-
 import net.londatiga.android.ActionItem
 import net.londatiga.android.QuickAction
 
@@ -92,7 +85,7 @@ class AppsFragment : ListFragment() {
 
         adapter = ApplicationsAdapter(activity)
         val l = listView
-        l.divider = resources.getDrawable(android.R.drawable.divider_horizontal_bright)
+        l.divider = ContextCompat.getDrawable(context, android.R.drawable.divider_horizontal_bright)
         l.adapter = adapter
         l.onItemClickListener = onItemClick
     }
@@ -156,7 +149,6 @@ class AppsFragment : ListFragment() {
         val activity = activity
         val quickAction = QuickAction(activity, QuickAction.HORIZONTAL)
 
-        val res = activity.resources
         val pm = activity.packageManager
 
         quickAction.addActionItem(ActionItem(
@@ -184,7 +176,7 @@ class AppsFragment : ListFragment() {
                 getString(R.string.action_dont_notify),
                 ContextCompat.getDrawable(activity, R.drawable.ic_do_not_disturb_white_48dp)))
 
-        quickAction.setOnActionItemClickListener { source, pos, actionId ->
+        quickAction.setOnActionItemClickListener { _, _, actionId ->
             val action = Actions.values()[actionId]
             val packageName = item.info!!.packageName
 
@@ -222,7 +214,9 @@ class AppsFragment : ListFragment() {
                     }
                 }
 
-                else -> Log.e(TAG, "TODO: Unknown action " + action)
+                else -> {
+                    Log.e(TAG, "TODO: Unknown action " + action)
+                }
             }
         }
 
@@ -266,13 +260,13 @@ class AppsFragment : ListFragment() {
         }
     }
 
-    private val onItemClick = OnItemClickListener { parent, view, position, id ->
+    private val onItemClick = OnItemClickListener { _, view, position, _ ->
         val index = position - listView.headerViewsCount
         val app = adapter!!.getItem(index)
         onListItemClick(app, view)
     }
 
-    private val onSortChanged = SortActionProvider.OnSortSelectedListener { source, order ->
+    private val onSortChanged: OnSortSelectedListener = {_, order ->
         this@AppsFragment.order = order
         dataObserver.onChanged()
         GA.event("Apps", "Order by", order.toString())
@@ -309,7 +303,7 @@ class AppsFragment : ListFragment() {
 
     companion object {
 
-        private val TAG = AppsFragment::class.java!!.getSimpleName()
+        private val TAG = AppsFragment::class.java.getSimpleName()
 
         private val ARG_FILTER = "AppsFragment.filter"
         private val ARG_ORDER = "AppsFragment.sort"

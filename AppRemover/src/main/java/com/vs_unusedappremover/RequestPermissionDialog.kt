@@ -29,7 +29,7 @@ class RequestPermissionDialog : AppCompatDialogFragment() {
 
         val d = builder
                 .setMessage(R.string.request_permission)
-                .setPositiveButton(R.string.allow) { dialog, which -> queryUsageStatsPermissionIfNeeded(activity) }
+                .setPositiveButton(R.string.allow) { _, _ -> queryUsageStatsPermissionIfNeeded(activity) }
                 .setNegativeButton(R.string.deny, null)
                 .setCancelable(false)
                 .create()

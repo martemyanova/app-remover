@@ -13,6 +13,7 @@ import com.vs_unusedappremover.common.GA
 
 class AdFragment : Fragment() {
 
+    @get:JvmName("getView_")
     private var view: View? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
