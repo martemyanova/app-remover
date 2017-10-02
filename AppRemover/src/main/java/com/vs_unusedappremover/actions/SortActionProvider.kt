@@ -58,7 +58,7 @@ class SortActionProvider(context: Context) : ActionProvider(context) {
             return position.toLong()
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val resultView =
                     when {
                         (convertView == null || convertView.id != R.id.list_item) ->
