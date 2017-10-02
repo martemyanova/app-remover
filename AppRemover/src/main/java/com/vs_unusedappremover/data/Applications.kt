@@ -13,33 +13,34 @@ object Applications {
 
     enum class Filter {
         DOWNLOADED {
-            override fun create(): Predicate<AppEntry> {
-                val myPackage = MyApplication.instance!!.packageName
+            override val create: (entry: AppEntry?) -> Boolean
+                get() = { entry ->
+                val myPackage = MyApplication.instance.packageName
 
-                return Predicate { entry -> myPackage != entry!!.info!!.packageName }
+                    entry != null && myPackage != entry.info.packageName
             }
         },
 
         UNUSED {
-            override fun create(): Predicate<AppEntry> {
-                val app = MyApplication.instance
-                val thisInstallTime = app!!.installTime
-                val myPackage = app.packageName
-
-                return Predicate { entry -> isUnused(entry, thisInstallTime) && myPackage != entry!!.info!!.packageName }
-            }
+            override val create: (entry: AppEntry?) -> Boolean
+                get() = { entry ->
+                    val app = MyApplication.instance
+                    val thisInstallTime = app.installTime
+                    val myPackage = app.packageName
+                    entry != null && isUnused(entry, thisInstallTime) && myPackage != entry.info.packageName
+                }
         };
 
-        abstract fun create(): Predicate<AppEntry>
+        abstract val create: (entry: AppEntry?) -> Boolean
     }
 
     fun isThirdParty(app: ApplicationInfo): Boolean {
         if (app.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0) return false
-        return if (app.flags and ApplicationInfo.FLAG_SYSTEM != 0) false else true
+        return app.flags and ApplicationInfo.FLAG_SYSTEM == 0
     }
 
-    private fun isUnused(app: AppEntry?, thisAppInstallDate: Long): Boolean {
-        if (!app!!.notifyAbout) return false
+    private fun isUnused(app: AppEntry, thisAppInstallDate: Long): Boolean {
+        if (!app.notifyAbout) return false
         var timeUsed = Math.max(app.lastUsedTime, app.installTime)
         timeUsed = Math.max(timeUsed, thisAppInstallDate)
         return System.currentTimeMillis() - timeUsed > UNUSED_INTERVAL_MILLIS

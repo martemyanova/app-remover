@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
@@ -29,20 +28,34 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
     private val mListPopupMaxWidth: Int
     private var mProvider: SortActionProvider? = null
 
+    private val listPopupWindow: ListPopupWindow by lazy {
+        val w = ListPopupWindow(context)
+        w.setAdapter(mAdapter)
+        w.anchorView = this@SortChooserView
+        w.isModal = true
+        w.setOnItemClickListener(onItemClick)
+        w.setOnDismissListener(onPopupDismissed)
+        w
+    }
+
+
+    constructor(mContext: Context, provider: SortActionProvider, adapter: SortActionAdapter) : this(mContext) {
+        mProvider = provider
+        mAdapter = adapter
+        setTextResource(provider.order.shortTextResId)
+        this.requestLayout()
+    }
+
     private val mOnGlobalLayoutListener = OnGlobalLayoutListener {
         if (isShowingPopup) {
             if (!isShown) {
                 listPopupWindow.dismiss()
             } else {
                 listPopupWindow.show()
-                if (mProvider != null) {
-                    mProvider!!.subUiVisibilityChanged(true)
-                }
+                mProvider?.subUiVisibilityChanged(true)
             }
         }
     }
-
-    private var mListPopupWindow: ListPopupWindow? = null
 
     private var mIsAttachedToWindow: Boolean = false
 
@@ -69,18 +82,8 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
         mListPopupMaxWidth = Math.max(resources.displayMetrics.widthPixels / 2, size)
     }
 
-    fun setAdapter(adapter: SortActionAdapter) {
-        this.mAdapter = adapter
-    }
-
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.itemListener = listener
-    }
-
-    fun setProvider(provider: SortActionProvider) {
-        mProvider = provider
-        setTextResource(mProvider!!.order.shortTextResId)
-        this.requestLayout()
     }
 
     fun showPopup(): Boolean {
@@ -98,12 +101,15 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
 
         val popupWindow = listPopupWindow
         if (!popupWindow.isShowing) {
-            val contentWidth = Math.min(measureContentWidth(mAdapter), mListPopupMaxWidth)
-            popupWindow.setContentWidth(contentWidth)
-            popupWindow.show()
-            if (mProvider != null) {
-                mProvider!!.subUiVisibilityChanged(true)
+            val adapter = mAdapter
+            if (adapter != null) {
+                val contentWidth = Math.min(measureContentWidth(adapter), mListPopupMaxWidth)
+                popupWindow.setContentWidth(contentWidth)
+                popupWindow.show()
             }
+
+            mProvider?.subUiVisibilityChanged(true)
+
             popupWindow.listView.contentDescription = mContext.getString(R.string.menu_sort)
         }
 
@@ -156,30 +162,17 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
         }
     }
 
-    private val listPopupWindow: ListPopupWindow
-        get() {
-            if (mListPopupWindow == null) {
-                mListPopupWindow = ListPopupWindow(context)
-                mListPopupWindow!!.setAdapter(mAdapter)
-                mListPopupWindow!!.anchorView = this@SortChooserView
-                mListPopupWindow!!.isModal = true
-                mListPopupWindow!!.setOnItemClickListener(onItemClick)
-                mListPopupWindow!!.setOnDismissListener(onPopupDismissed)
-            }
-            return mListPopupWindow as ListPopupWindow
-        }
-
-    private fun measureContentWidth(adapter: BaseAdapter?): Int {
+    private fun measureContentWidth(adapter: BaseAdapter): Int {
 
         val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        val count = adapter!!.count
+        val count = adapter.count
 
         var contentWidth = 0
         var itemView: View? = null
-        for (i in 0..count - 1) {
+        for (i in 0 until count) {
             itemView = adapter.getView(i, itemView, null)
-            itemView!!.measure(widthMeasureSpec, heightMeasureSpec)
+            itemView?.measure(widthMeasureSpec, heightMeasureSpec)
             contentWidth = Math.max(contentWidth, itemView.measuredWidth)
         }
         return contentWidth
@@ -198,9 +191,8 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
     }
 
     private val onPopupDismissed = PopupWindow.OnDismissListener {
-        setTextResource(mProvider!!.order.shortTextResId)
-        if (mProvider != null) {
-            mProvider!!.subUiVisibilityChanged(false)
-        }
+        val provider = mProvider ?: return@OnDismissListener
+        setTextResource(provider.order.shortTextResId)
+        provider.subUiVisibilityChanged(false)
     }
 }

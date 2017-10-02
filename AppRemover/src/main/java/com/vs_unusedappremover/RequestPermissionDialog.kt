@@ -35,7 +35,7 @@ class RequestPermissionDialog : AppCompatDialogFragment() {
                 .create()
 
         val window = d.window
-        val attributes = window!!.attributes
+        val attributes = window.attributes
         attributes.gravity = Gravity.BOTTOM
         attributes.flags = attributes.flags and WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
         window.attributes = attributes
@@ -62,7 +62,7 @@ class RequestPermissionDialog : AppCompatDialogFragment() {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                 try {
                     val context = MyApplication.instance
-                    val aom = context!!.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+                    val aom = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
                     val mode = aom.checkOp(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.packageName)
                     return mode == AppOpsManager.MODE_ALLOWED
                 } catch (e: RuntimeException) {

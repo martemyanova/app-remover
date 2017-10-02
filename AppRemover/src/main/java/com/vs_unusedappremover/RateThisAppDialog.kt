@@ -66,7 +66,7 @@ class RateThisAppDialog : DialogFragment() {
         private val isFromPlayMarket: Boolean
             get() {
                 val app = MyApplication.instance
-                val pm = app!!.packageManager
+                val pm = app.packageManager
                 val installerName = pm.getInstallerPackageName(app.packageName)
                 return "com.android.vending" == installerName
             }
@@ -75,7 +75,7 @@ class RateThisAppDialog : DialogFragment() {
             get() {
                 val app = MyApplication.instance
 
-                val uri = Uri.parse("market://details?id=" + app!!.packageName)
+                val uri = Uri.parse("market://details?id=" + app.packageName)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
 
                 val pm = app.packageManager
@@ -84,8 +84,7 @@ class RateThisAppDialog : DialogFragment() {
                 } else intent
             }
 
-        private fun getPreferences(context: Context): SharedPreferences {
-            return context.getSharedPreferences("rate app", Context.MODE_PRIVATE)
-        }
+        private fun getPreferences(context: Context): SharedPreferences =
+                context.getSharedPreferences("rate app", Context.MODE_PRIVATE)
     }
 }

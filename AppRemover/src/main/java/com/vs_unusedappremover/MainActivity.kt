@@ -37,8 +37,8 @@ class MainActivity : ActionBarActivity() {
 
         val sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
-        val viewPager = findViewById(R.id.pager) as ViewPager?
-        viewPager!!.adapter = sectionsPagerAdapter
+        val viewPager = findViewById(R.id.pager) as ViewPager
+        viewPager.adapter = sectionsPagerAdapter
         val item = intent.getIntExtra(EXTRA_PAGE, Pages.DOWNLOADED.ordinal)
         viewPager.currentItem = item
 

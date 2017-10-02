@@ -3,17 +3,12 @@ package com.vs_unusedappremover
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Handler
-
 import com.squareup.picasso.Picasso
 import com.vs_unusedappremover.common.GA
 import com.vs_unusedappremover.data.ApplicationCollection
 import com.vs_unusedappremover.data.DatabaseHelper
-
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.LinkedBlockingQueue
@@ -22,13 +17,16 @@ import java.util.concurrent.TimeUnit
 
 class MyApplication : Application() {
 
-    private var database: DatabaseHelper? = null
+    val dbHelper: DatabaseHelper by lazy {
+        DatabaseHelper(this)
+    }
+
     val backgroundExecutor: ExecutorService
-    var uiHandler: Handler? = null
+    lateinit var uiHandler: Handler
         private set
-    var applications: ApplicationCollection? = null
+    lateinit var applications: ApplicationCollection
         private set
-    private var picasso: Picasso? = null
+    lateinit private var picasso: Picasso
 
     init {
         backgroundExecutor = ThreadPoolExecutor(2, 16, 1, TimeUnit.SECONDS, LinkedBlockingQueue())
@@ -47,14 +45,6 @@ class MyApplication : Application() {
         startMonitoringService(this)
         checkInstallTimePresent()
     }
-
-    val dbHelper: DatabaseHelper
-        @Synchronized get() {
-            if (database == null) {
-                database = DatabaseHelper(this)
-            }
-            return database as DatabaseHelper
-        }
 
     val installTime: Long
         get() {
@@ -91,10 +81,10 @@ class MyApplication : Application() {
 
     companion object {
 
-        val TAG = MyApplication::class.java.getSimpleName()
+        val TAG: String = MyApplication::class.java.simpleName
         private val INSTALL_TIME = "install time"
 
-        var instance: MyApplication? = null
+        lateinit var instance: MyApplication
             private set
 
         fun startMonitoringService(context: Context) {

@@ -20,8 +20,9 @@ class Plural(private val res: Resources) {
     }
 
     fun format(pluralResId: Int, quantity: Int, vararg args: Any): String {
+        val pluralRes = pluralRes
         return if (pluralRes != null) {
-            pluralRes!!.getQuantityString(pluralResId, quantity, *args)
+            pluralRes.getQuantityString(pluralResId, quantity, *args)
         } else {
             res.getQuantityString(pluralResId, quantity, *args)
         }

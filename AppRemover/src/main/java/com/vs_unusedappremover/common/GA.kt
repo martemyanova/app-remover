@@ -15,7 +15,7 @@ object GA {
 
     private val TAG = "GA"
     private var sTracker: EasyTracker? = null
-    private var exceptionParser: ExceptionParser? = null
+    lateinit private var exceptionParser: ExceptionParser
 
     fun init(resourcesPackage: String?, context: Context, vararg additionalPackages: String) {
         EasyTracker.setResourcePackageName(resourcesPackage)
@@ -30,21 +30,21 @@ object GA {
     }
 
     fun setCustomDimension(index: Int, value: String) {
-        sTracker!!.set(Fields.customDimension(index), value)
+        sTracker?.set(Fields.customDimension(index), value)
         Log.i(TAG, "set dimension[$index]=$value")
     }
 
     fun onActivityStart(sender: Activity) {
-        sTracker!!.activityStart(sender)
+        sTracker?.activityStart(sender)
     }
 
     fun onActivityStop(sender: Activity) {
-        sTracker!!.activityStop(sender)
+        sTracker?.activityStop(sender)
     }
 
     fun onFragmentShown(tag: String) {
-        sTracker!!.set(Fields.SCREEN_NAME, tag)
-        sTracker!!.send(MapBuilder
+        sTracker?.set(Fields.SCREEN_NAME, tag)
+        sTracker?.send(MapBuilder
                 .createAppView()
                 .build())
     }
@@ -67,7 +67,7 @@ object GA {
 
     @JvmOverloads
     fun timing(category: String, timeInMilliseconds: Long, name: String, label: String? = null) {
-        sTracker!!.send(MapBuilder.createTiming(category, timeInMilliseconds, name, label).build())
+        sTracker?.send(MapBuilder.createTiming(category, timeInMilliseconds, name, label).build())
         Log.i(TAG, "timing $category time=\"$timeInMilliseconds\" name=\"$name\" label=$label")
     }
 
@@ -76,14 +76,14 @@ object GA {
     }
 
     fun reportException(thread: Thread, th: Throwable, fatal: Boolean) {
-        val description = exceptionParser!!.getDescription(thread.name, th)
-        sTracker!!.send(MapBuilder
+        val description = exceptionParser.getDescription(thread.name, th)
+        sTracker?.send(MapBuilder
                 .createException(description, false)
                 .build())
     }
 
     private fun eventInternal(category: String, action: String, description: String?, value: Long?) {
-        sTracker!!.send(MapBuilder.createEvent(category, action, description, value).build())
+        sTracker?.send(MapBuilder.createEvent(category, action, description, value).build())
         Log.i(TAG, "event $category action=\"$action\" desc=\"$description\" value=$value")
     }
 }

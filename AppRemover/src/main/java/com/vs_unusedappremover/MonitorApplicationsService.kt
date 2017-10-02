@@ -29,10 +29,10 @@ import java.util.LinkedList
 
 class MonitorApplicationsService : Service() {
 
-    private var app: MyApplication? = null
+    lateinit private var app: MyApplication
     private var prevRecentTasks = LinkedList<String>()
-    private var recentAppsTimer: HandlerTimer? = null
-    private var runningAppTimer: HandlerTimer? = null
+    lateinit private var recentAppsTimer: HandlerTimer
+    lateinit private var runningAppTimer: HandlerTimer
 
     override fun onCreate() {
         super.onCreate()
@@ -79,12 +79,12 @@ class MonitorApplicationsService : Service() {
 
     private fun onScreenStateChanged(isScreenOn: Boolean) {
         //recentAppsTimer.setEnabled(isScreenOn);
-        runningAppTimer!!.setEnabled(isScreenOn)
+        runningAppTimer.setEnabled(isScreenOn)
     }
 
     private val recentTasks: LinkedList<String>
         get() {
-            val activityManager = app!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val activityManager = app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val recentTasks = LinkedList<String>()
 
             for (task in activityManager.getRecentTasks(50, ActivityManager.RECENT_WITH_EXCLUDED)) {
@@ -111,7 +111,7 @@ class MonitorApplicationsService : Service() {
 
     private fun showNotificationIfNeeded() {
         if (UnusedAppsNotification.needToShow(this)) {
-            val unused = app!!.applications!!.values(Filter.UNUSED.create())
+            val unused = app.applications.values(filter = Filter.UNUSED.create)
             if (unused.size > 0) {
                 var packageSizes: Long = 0
                 for (app in unused) {
@@ -127,12 +127,12 @@ class MonitorApplicationsService : Service() {
         Log.i(TAG, "resent used: " + Iterables.toString(recentUsed))
         val time = System.currentTimeMillis()
         for (appPackage in recentUsed) {
-            app!!.applications!!.notifyUsed(appPackage, time, AppEntry.RanIn.FOREGROUND)
+            app.applications.notifyUsed(appPackage, time, AppEntry.RanIn.FOREGROUND)
         }
     }
 
     private fun updateRunningApps() {
-        app!!.backgroundExecutor.execute {
+        app.backgroundExecutor.execute {
             updateForegroundApps()
             updateRunningServices()
         }
@@ -140,11 +140,11 @@ class MonitorApplicationsService : Service() {
 
     private fun updateForegroundApps() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val m = app!!.getSystemService("usagestats") as UsageStatsManager
+            val m = app.getSystemService("usagestats") as UsageStatsManager
             val usageStats = m.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, 0, System.currentTimeMillis())
             if (usageStats != null) {
                 for (s in usageStats) {
-                    app!!.applications!!.notifyUsed(s.packageName, s.lastTimeUsed, AppEntry.RanIn.FOREGROUND)
+                    app.applications.notifyUsed(s.packageName, s.lastTimeUsed, AppEntry.RanIn.FOREGROUND)
                 }
             }
         } else {
@@ -152,7 +152,7 @@ class MonitorApplicationsService : Service() {
             for (info in am.getRunningTasks(100)) {
                 if (info.topActivity != null) {
                     val taskName = info.topActivity.packageName
-                    app!!.applications!!.notifyUsed(taskName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
+                    app.applications.notifyUsed(taskName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
                     break
                 }
             }
@@ -160,13 +160,13 @@ class MonitorApplicationsService : Service() {
     }
 
     private fun updateRunningServices() {
-        val am = app!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val am = app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val infos = am.getRunningServices(500)
         for (info in infos) {
 
             val appPackage = getPackageFromProcess(info.process)
             val time = fromSysTimeToClock(info.lastActivityTime)
-            app!!.applications!!.notifyUsed(appPackage, time, AppEntry.RanIn.BACKGROUND)
+            app.applications.notifyUsed(appPackage, time, AppEntry.RanIn.BACKGROUND)
         }
     }
 

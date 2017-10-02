@@ -19,14 +19,10 @@ import com.vs_unusedappremover.data.Plural
 import java.util.ArrayList
 
 class ApplicationsAdapter(private val context: Context) : BaseAdapter() {
-    private val elapsedTime: ElapsedTimeFormatter
-    private val unknownUsageTime: UnknownUsageTimeFormatter
-    private val items = ArrayList<AppEntry>()
 
-    init {
-        this.elapsedTime = ElapsedTimeFormatter(context)
-        this.unknownUsageTime = UnknownUsageTimeFormatter(context)
-    }
+    private val elapsedTime = ElapsedTimeFormatter(context)
+    private val unknownUsageTime = UnknownUsageTimeFormatter(context)
+    private val items = ArrayList<AppEntry>()
 
     fun setApplications(applications: Collection<AppEntry>) {
         items.clear()
@@ -55,7 +51,7 @@ class ApplicationsAdapter(private val context: Context) : BaseAdapter() {
         val entry = getItem(index)
         holder.appName.text = entry.label
 
-        MyApplication.instance!!.picasso()!!.load(AppIcon.buildUrl(entry.info!!.packageName)).into(holder.appIcon)
+        MyApplication.instance.picasso()?.load(AppIcon.buildUrl(entry.info.packageName))?.into(holder.appIcon)
 
         holder.doNotNotify.visibility = if (entry.notifyAbout) View.INVISIBLE else View.VISIBLE
 
@@ -137,7 +133,7 @@ internal class ElapsedTimeFormatter(context: Context) {
 }
 
 internal class UnknownUsageTimeFormatter(context: Context) {
-    private val removerInstallTime = MyApplication.instance!!.installTime
+    private val removerInstallTime = MyApplication.instance.installTime
     private val res: Resources
     private val pluralRes: Plural
 

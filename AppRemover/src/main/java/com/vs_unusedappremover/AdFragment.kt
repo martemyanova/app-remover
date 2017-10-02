@@ -16,14 +16,14 @@ class AdFragment : Fragment() {
     @get:JvmName("getView_")
     private var view: View? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        view = inflater!!.inflate(R.layout.admob_banner, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        view = inflater.inflate(R.layout.admob_banner, container, false)
         return view
     }
 
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
-        val mAdView = getView()!!.findViewById(R.id.adView) as AdView
+        val mAdView = getView()?.findViewById(R.id.adView) as AdView
         val adRequest = AdRequest.Builder().build()
         mAdView.adListener = adListener
         mAdView.loadAd(adRequest)
@@ -38,7 +38,7 @@ class AdFragment : Fragment() {
         override fun onAdLoaded() {
             GA.event("Ad", "received ad")
             if (view != null) {
-                view!!.visibility = View.VISIBLE
+                view?.visibility = View.VISIBLE
             }
         }
     }

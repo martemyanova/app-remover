@@ -43,8 +43,8 @@ class AppsFragment : ListFragment() {
         DONT_NOTIFY
     }
 
-    private var adapter: ApplicationsAdapter? = null
-    private var applicationCollection: ApplicationCollection? = null
+    lateinit private var adapter: ApplicationsAdapter
+    lateinit private var applicationCollection: ApplicationCollection
     private var order = OrderBy.TIME_UNUSED
     private var filter: Applications.Filter = Applications.Filter.DOWNLOADED
     private var isCustomView: Boolean = false
@@ -67,16 +67,16 @@ class AppsFragment : ListFragment() {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        applicationCollection = MyApplication.instance!!.applications
+        applicationCollection = MyApplication.instance.applications
         val state = savedState ?: arguments
         readParameters(state)
 
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return if (isCustomView) {
-            inflater!!.inflate(R.layout.list_unused, container, false)
+            inflater.inflate(R.layout.list_unused, container, false)
         } else super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -90,19 +90,19 @@ class AppsFragment : ListFragment() {
         l.onItemClickListener = onItemClick
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         putParameters(outState, filter, order)
     }
 
     override fun onResume() {
         super.onResume()
-        applicationCollection!!.addObserver(dataObserver)
+        applicationCollection?.addObserver(dataObserver)
         dataObserver.onChanged()
     }
 
     override fun onPause() {
-        applicationCollection!!.removeObserver(dataObserver)
+        applicationCollection?.removeObserver(dataObserver)
 
         super.onPause()
     }
@@ -112,10 +112,10 @@ class AppsFragment : ListFragment() {
         super.onDestroy()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.activity_main, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.activity_main, menu)
 
-        val sort = menu!!.findItem(R.id.menu_sort)
+        val sort = menu.findItem(R.id.menu_sort)
         if (sort != null) {
             val p = MenuItemCompat.getActionProvider(sort) as SortActionProvider
             p.order = order
@@ -159,9 +159,9 @@ class AppsFragment : ListFragment() {
         quickAction.addActionItem(ActionItem(
                 Actions.LAUNCH.ordinal,
                 getString(R.string.action_launch),
-                AppIcon.buildUrl(item.info!!.packageName)))
+                AppIcon.buildUrl(item.info.packageName)))
 
-        val openInPlayStoreIntent = getOpenInPlayStoreIntent(pm, item.info!!.packageName)
+        val openInPlayStoreIntent = getOpenInPlayStoreIntent(pm, item.info.packageName)
         val infos = pm.queryIntentActivities(openInPlayStoreIntent, 0)
 
         if (infos.size > 0) {
@@ -178,7 +178,7 @@ class AppsFragment : ListFragment() {
 
         quickAction.setOnActionItemClickListener { _, _, actionId ->
             val action = Actions.values()[actionId]
-            val packageName = item.info!!.packageName
+            val packageName = item.info.packageName
 
             when (action) {
                 AppsFragment.Actions.REMOVE -> {
@@ -187,7 +187,7 @@ class AppsFragment : ListFragment() {
                 }
 
                 AppsFragment.Actions.LAUNCH -> {
-                    applicationCollection!!.notifyUsed(packageName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
+                    applicationCollection?.notifyUsed(packageName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
                     val i = pm.getLaunchIntentForPackage(packageName)
                     try {
                         startActivity(i)
@@ -207,7 +207,7 @@ class AppsFragment : ListFragment() {
 
                 AppsFragment.Actions.DONT_NOTIFY -> {
                     val willNotify = !item.notifyAbout
-                    applicationCollection!!.setNotifyAbout(packageName, willNotify)
+                    applicationCollection?.setNotifyAbout(packageName, willNotify)
                     GA.event("Apps", "Change notify/not notify")
                     if (!willNotify) {
                         Toast.makeText(activity, R.string.toast_dont_notify, Toast.LENGTH_SHORT).show()
@@ -255,14 +255,14 @@ class AppsFragment : ListFragment() {
     }
 
     private fun stopDataUpdateIfNeeded() {
-        if (updateTask != null && updateTask!!.status == Status.RUNNING) {
-            updateTask!!.cancel(true)
+        if (updateTask != null && updateTask?.status == Status.RUNNING) {
+            updateTask?.cancel(true)
         }
     }
 
     private val onItemClick = OnItemClickListener { _, view, position, _ ->
         val index = position - listView.headerViewsCount
-        val app = adapter!!.getItem(index)
+        val app = adapter.getItem(index)
         onListItemClick(app, view)
     }
 
@@ -283,18 +283,18 @@ class AppsFragment : ListFragment() {
         Log.i(TAG, "Data changed")
         stopDataUpdateIfNeeded()
         updateTask = UpdateDataTask()
-        updateTask!!.execute()
+        updateTask?.execute()
     }
 
     private inner class UpdateDataTask : AsyncTask<Void, Int, Collection<AppEntry>>() {
 
         override fun doInBackground(vararg params: Void): Collection<AppEntry> {
-            return applicationCollection!!.values(filter.create(), order)
+            return applicationCollection.values(order, filter.create)
         }
 
         override fun onPostExecute(result: Collection<AppEntry>) {
             if (activity == null) return
-            adapter!!.setApplications(result)
+            adapter.setApplications(result)
             if (!isCustomView) {
                 setListShown(true)
             }
@@ -303,7 +303,7 @@ class AppsFragment : ListFragment() {
 
     companion object {
 
-        private val TAG = AppsFragment::class.java.getSimpleName()
+        private val TAG = AppsFragment::class.java.simpleName
 
         private val ARG_FILTER = "AppsFragment.filter"
         private val ARG_ORDER = "AppsFragment.sort"
@@ -316,8 +316,8 @@ class AppsFragment : ListFragment() {
             return fragment
         }
 
-        private fun putParameters(toBundle: Bundle?, show: Applications.Filter, order: OrderBy) {
-            toBundle!!.putInt(ARG_FILTER, show.ordinal)
+        private fun putParameters(toBundle: Bundle, show: Applications.Filter, order: OrderBy) {
+            toBundle.putInt(ARG_FILTER, show.ordinal)
             toBundle.putInt(ARG_ORDER, order.ordinal)
         }
     }

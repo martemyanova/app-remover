@@ -50,6 +50,6 @@ class SelectQuery {
     }
 
     fun execute(resolver: ContentResolver): Cursor {
-        return resolver.query((from as Uri?)!!, columns, selection, selectArgs, orderBy) ?: throw SQLiteException("null cursor")
+        return resolver.query((from as Uri?), columns, selection, selectArgs, orderBy) ?: throw SQLiteException("null cursor")
     }
 }
