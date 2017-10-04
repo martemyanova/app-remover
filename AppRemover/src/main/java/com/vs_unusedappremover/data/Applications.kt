@@ -2,7 +2,6 @@ package com.vs_unusedappremover.data
 
 import android.content.pm.ApplicationInfo
 
-import com.google.common.base.Predicate
 import com.vs_unusedappremover.AppEntry
 import com.vs_unusedappremover.MyApplication
 import com.vs_unusedappremover.common.MillisecondsIn

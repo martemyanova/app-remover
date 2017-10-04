@@ -7,15 +7,15 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 
 import com.vs_unusedappremover.common.GA
 import com.vs_unusedappremover.data.Applications
 import com.vs_unusedappremover.data.OrderBy
 
-class MainActivity : ActionBarActivity() {
+class MainActivity : AppCompatActivity() {
 
-    private enum class Pages private constructor(val titleResId: Int) {
+    private enum class Pages(val titleResId: Int) {
         DOWNLOADED(R.string.title_downloaded_applications) {
             override fun createFragment(): Fragment {
                 return AppsFragment.create(Applications.Filter.DOWNLOADED, OrderBy.TIME_UNUSED)

@@ -21,9 +21,6 @@ class SortActionProvider(context: Context) : ActionProvider(context) {
     private val adapter: SortActionAdapter
     private var listener: OnSortSelectedListener? = null
     var order = OrderBy.TIME_UNUSED
-        set(value) {
-            field = value
-        }
 
     init {
         this.adapter = SortActionAdapter(context)
@@ -46,17 +43,11 @@ class SortActionProvider(context: Context) : ActionProvider(context) {
 
     class SortActionAdapter(private val context: Context) : BaseAdapter() {
 
-        override fun getCount(): Int {
-            return OrderBy.values().size
-        }
+        override fun getCount(): Int = OrderBy.values().size
 
-        override fun getItem(position: Int): OrderBy {
-            return OrderBy.values()[position]
-        }
+        override fun getItem(position: Int): OrderBy = OrderBy.values()[position]
 
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
+        override fun getItemId(position: Int): Long = position.toLong()
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val resultView =

@@ -6,10 +6,6 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.database.DataSetObserver
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.google.common.base.Predicate
-import com.google.common.collect.Collections2
-import com.google.common.collect.Iterables
-import com.google.common.collect.Lists
 import com.vs_unusedappremover.AppEntry
 import com.vs_unusedappremover.MyApplication
 import com.vs_unusedappremover.PackageSize
@@ -17,6 +13,7 @@ import com.vs_unusedappremover.data.DatabaseHelper.AppTable
 import java.io.File
 import java.text.DateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ApplicationCollection(private val context: Context) {
 
@@ -25,19 +22,26 @@ class ApplicationCollection(private val context: Context) {
     private val groupedChangeNotifications = GroupChangeNotifications(NOTIFY_UPDATED_INTERVAL)
     private val app = MyApplication.instance
     private val modificationLock = Any()
+    private val data: HashMap<String, AppEntry>
+        get() {
+            synchronized(modificationLock) {
+                return previousData
+            }
+        }
 
     init {
         notifyChanged()
     }
 
     @JvmOverloads
-    fun values(order: Comparator<AppEntry>? = null, filter: (entry: AppEntry?) -> Boolean): ArrayList<AppEntry> {
+    fun values(order: Comparator<AppEntry>? = null, filter: (AppEntry) -> Boolean): ArrayList<AppEntry> {
         synchronized(modificationLock) {
-            val result = Lists.newArrayList(Collections2.filter(data.values, filter))
+            val result = data.values.filter(filter)
+            //result.sortedBy(filter)
             if (order != null) {
                 Collections.sort(result, order)
             }
-            return result
+            return ArrayList(result)
         }
     }
 
@@ -104,13 +108,6 @@ class ApplicationCollection(private val context: Context) {
         fireChanged()
     }
 
-    private val data: HashMap<String, AppEntry>
-        get() {
-            synchronized(modificationLock) {
-                return previousData
-            }
-        }
-
     private fun fillFromDbCache(entry: AppEntry) {
         val dbHelper = app.dbHelper
 
@@ -171,13 +168,8 @@ class ApplicationCollection(private val context: Context) {
 
         val time = DateFormat.getTimeInstance(DateFormat.SHORT)
 
-        Log.i(TAG, " cached " + Iterables.toString(
-                Iterables.transform(entries) { e ->
-                    when (e) {
-                        null -> "null"
-                        else -> e.info.packageName + "=(" + time.format(Date(e.lastUsedTime)) + ")"
-                    }
-                }))
+        Log.i(TAG, " cached " + entries.joinToString(prefix = "[", postfix = "]") { it ->
+            it.info.packageName + "=(" + time.format(Date(it.lastUsedTime)) + ")" })
     }
 
     private val existingApps: Set<String>

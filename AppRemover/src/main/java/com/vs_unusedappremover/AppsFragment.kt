@@ -97,12 +97,12 @@ class AppsFragment : ListFragment() {
 
     override fun onResume() {
         super.onResume()
-        applicationCollection?.addObserver(dataObserver)
+        applicationCollection.addObserver(dataObserver)
         dataObserver.onChanged()
     }
 
     override fun onPause() {
-        applicationCollection?.removeObserver(dataObserver)
+        applicationCollection.removeObserver(dataObserver)
 
         super.onPause()
     }
@@ -187,7 +187,7 @@ class AppsFragment : ListFragment() {
                 }
 
                 AppsFragment.Actions.LAUNCH -> {
-                    applicationCollection?.notifyUsed(packageName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
+                    applicationCollection.notifyUsed(packageName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
                     val i = pm.getLaunchIntentForPackage(packageName)
                     try {
                         startActivity(i)
@@ -207,7 +207,7 @@ class AppsFragment : ListFragment() {
 
                 AppsFragment.Actions.DONT_NOTIFY -> {
                     val willNotify = !item.notifyAbout
-                    applicationCollection?.setNotifyAbout(packageName, willNotify)
+                    applicationCollection.setNotifyAbout(packageName, willNotify)
                     GA.event("Apps", "Change notify/not notify")
                     if (!willNotify) {
                         Toast.makeText(activity, R.string.toast_dont_notify, Toast.LENGTH_SHORT).show()
@@ -289,7 +289,7 @@ class AppsFragment : ListFragment() {
     private inner class UpdateDataTask : AsyncTask<Void, Int, Collection<AppEntry>>() {
 
         override fun doInBackground(vararg params: Void): Collection<AppEntry> {
-            return applicationCollection.values(order, filter.create)
+            return applicationCollection.values(order.comparator, filter.create)
         }
 
         override fun onPostExecute(result: Collection<AppEntry>) {

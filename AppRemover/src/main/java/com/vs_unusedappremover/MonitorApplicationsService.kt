@@ -1,31 +1,18 @@
 package com.vs_unusedappremover
 
 import android.app.ActivityManager
-import android.app.ActivityManager.RecentTaskInfo
-import android.app.ActivityManager.RunningServiceInfo
-import android.app.ActivityManager.RunningTaskInfo
 import android.app.Service
-import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
-import android.os.Handler
-import android.os.IBinder
-import android.os.PowerManager
-import android.os.SystemClock
+import android.os.*
 import android.util.Log
-
-import com.google.common.collect.Iterables
 import com.vs_unusedappremover.common.HandlerTimer
 import com.vs_unusedappremover.common.MillisecondsIn
 import com.vs_unusedappremover.data.Applications.Filter
-
-import java.util.ArrayList
-import java.util.LinkedList
+import java.util.*
 
 class MonitorApplicationsService : Service() {
 
@@ -124,7 +111,7 @@ class MonitorApplicationsService : Service() {
 
     private fun updateRecentUsedApps() {
         val recentUsed = selectRecentUsed(recentTasks)
-        Log.i(TAG, "resent used: " + Iterables.toString(recentUsed))
+        Log.i(TAG, "resent used: " + recentUsed.joinToString(prefix = "[", postfix = "]"))
         val time = System.currentTimeMillis()
         for (appPackage in recentUsed) {
             app.applications.notifyUsed(appPackage, time, AppEntry.RanIn.FOREGROUND)
