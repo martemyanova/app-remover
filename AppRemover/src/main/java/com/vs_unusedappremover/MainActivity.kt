@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 
 import com.vs_unusedappremover.common.GA
 import com.vs_unusedappremover.data.Applications
 import com.vs_unusedappremover.data.OrderBy
+
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,10 +38,9 @@ class MainActivity : AppCompatActivity() {
 
         val sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
-        val viewPager = findViewById(R.id.pager) as ViewPager
-        viewPager.adapter = sectionsPagerAdapter
+        pager.adapter = sectionsPagerAdapter
         val item = intent.getIntExtra(EXTRA_PAGE, Pages.DOWNLOADED.ordinal)
-        viewPager.currentItem = item
+        pager.currentItem = item
 
         if (intent.getBooleanExtra(EXTRA_FROM_NOTIFICATION, false)) {
             GA.event("MainActivity", "Start from notification")

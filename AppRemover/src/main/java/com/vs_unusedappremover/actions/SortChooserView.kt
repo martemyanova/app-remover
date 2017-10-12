@@ -69,7 +69,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
         mButton = findViewById(R.id.expand_activities_button)
         mButton.setOnClickListener(onButtonClick)
 
-        mTextView = findViewById(R.id.text) as TextView
+        mTextView = findViewById<TextView>(R.id.text)
 
         val resources = mContext.resources
         var size = 0
@@ -110,7 +110,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
 
             mProvider?.subUiVisibilityChanged(true)
 
-            popupWindow.listView.contentDescription = mContext.getString(R.string.menu_sort)
+            popupWindow.listView?.contentDescription = mContext.getString(R.string.menu_sort)
         }
 
         setTextResource(R.string.order_by)

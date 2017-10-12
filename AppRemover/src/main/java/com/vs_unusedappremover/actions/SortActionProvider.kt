@@ -59,7 +59,7 @@ class SortActionProvider(context: Context) : ActionProvider(context) {
 
             val order = getItem(position)
 
-            val titleView = resultView.findViewById(R.id.title) as TextView
+            val titleView = resultView.findViewById<TextView>(R.id.title)
             titleView.setText(order.fullTextResId)
 
             return resultView

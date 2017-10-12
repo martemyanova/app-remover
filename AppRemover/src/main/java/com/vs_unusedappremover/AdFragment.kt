@@ -5,11 +5,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
 import com.vs_unusedappremover.common.GA
+import kotlinx.android.synthetic.main.admob_banner.*
 
 class AdFragment : Fragment() {
 
@@ -23,10 +22,9 @@ class AdFragment : Fragment() {
 
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
-        val mAdView = getView()?.findViewById(R.id.adView) as AdView
         val adRequest = AdRequest.Builder().build()
-        mAdView.adListener = adListener
-        mAdView.loadAd(adRequest)
+        adView.adListener = adListener
+        adView.loadAd(adRequest)
     }
 
     private val adListener = object : AdListener() {

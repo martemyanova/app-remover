@@ -2,7 +2,6 @@ package com.vs_unusedappremover
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.text.format.DateUtils
@@ -167,11 +166,11 @@ internal class ApplicationViewHolder private constructor(context: Context) {
 
     init {
         rootView = View.inflate(context, R.layout.list_item_application, null)
-        appName = rootView.findViewById(R.id.app_name) as TextView
-        appIcon = rootView.findViewById(R.id.app_icon) as ImageView
-        appSize = rootView.findViewById(R.id.app_size) as TextView
-        lastUsed = rootView.findViewById(R.id.app_last_used) as TextView
-        doNotNotify = rootView.findViewById(R.id.app_dont_notify) as ImageView
+        appName =  rootView.findViewById<TextView>(R.id.app_name)
+        appIcon = rootView.findViewById<ImageView>(R.id.app_icon)
+        appSize = rootView.findViewById<TextView>(R.id.app_size)
+        lastUsed = rootView.findViewById<TextView>(R.id.app_last_used)
+        doNotNotify = rootView.findViewById<ImageView>(R.id.app_dont_notify)
         val drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.ic_do_not_disturb_black_24dp))
         DrawableCompat.setTint(drawable, 0x80000000.toInt())
         doNotNotify.setImageDrawable(drawable)
