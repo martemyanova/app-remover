@@ -2,28 +2,23 @@ package com.vs_unusedappremover.data
 
 import com.vs_unusedappremover.AppEntry
 import com.vs_unusedappremover.R
-import java.util.*
+import kotlin.Comparator
 
-enum class OrderBy(val shortTextResId: Int, val fullTextResId: Int) {
+enum class OrderBy(val shortText: Int, val fullText: Int, val comparator: Comparator<AppEntry>) {
 
-    TIME_UNUSED(R.string.order_by_time_unused_action_bar,
-            R.string.order_by_time_unused_menu) {
+    TIME_UNUSED(
+            shortText = R.string.order_by_time_unused_action_bar,
+            fullText = R.string.order_by_time_unused_menu,
+            comparator = AppEntry.byTimeUnused),
 
-        override val comparator: Comparator<AppEntry>
-            get() = AppEntry.byTimeUnused
-    },
+    NAME(
+            shortText = R.string.order_by_name_action_bar,
+            fullText = R.string.order_by_name_menu,
+            comparator = AppEntry.byLabel),
 
-    NAME(R.string.order_by_name_action_bar, R.string.order_by_name_menu) {
+    SIZE(
+            shortText = R.string.order_by_size_action_bar,
+            fullText = R.string.order_by_size_menu,
+            comparator = AppEntry.bySize);
 
-        override val comparator: Comparator<AppEntry>
-            get() = AppEntry.byLabel
-    },
-
-    SIZE(R.string.order_by_size_action_bar, R.string.order_by_size_menu) {
-
-        override val comparator
-            get() = AppEntry.bySize
-    };
-
-    abstract val comparator: Comparator<AppEntry>
 }

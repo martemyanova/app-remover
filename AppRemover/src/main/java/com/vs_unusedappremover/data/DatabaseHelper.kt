@@ -18,20 +18,20 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             val TIME_LAST_USED = "time_last_used"
             val RAN_IN = "ran_in"
             val TIME_INSTALLED = "time_installed"
-            val DOWLOAD_COUNT = "download_count"
+            val DOWNLOAD_COUNT = "download_count"
             val RATING = "rating"
             val SIZE = "size"
             val NOTIFY = "notify"
 
             val CREATE = "create table $NAME (\n" +
-                PACKAGE + " text primary key, \n" +
-                TIME_LAST_USED + " int, \n" +
-                TIME_INSTALLED + " int, \n" +
-                DOWLOAD_COUNT + " text, \n" +
-                RATING + " real, \n" +
-                SIZE + " int, \n" +
-                NOTIFY + " int, \n" +
-                RAN_IN + " int); "
+                "$PACKAGE text primary key, \n" +
+                "$TIME_LAST_USED int, \n" +
+                "$TIME_INSTALLED int, \n" +
+                "$DOWNLOAD_COUNT text, \n" +
+                "$RATING real, \n" +
+                "$SIZE int, \n" +
+                "$NOTIFY int, \n" +
+                "$RAN_IN int); "
         }
     }
 
@@ -60,23 +60,23 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             }
             3 -> upgradeFrom3to4(db)
             else -> {
-                db.execSQL("drop table if exists " + AppTable.NAME + ";")
+                db.execSQL("drop table if exists ${AppTable.NAME};")
                 onCreate(db)
             }
         }
     }
 
     private fun upgradeFrom2to3(db: SQLiteDatabase) {
-        db.execSQL("ALTER TABLE " + AppTable.NAME + " ADD COLUMN " + AppTable.NOTIFY + " int NOT NULL DEFAULT(1);")
+        db.execSQL("ALTER TABLE ${AppTable.NAME} ADD COLUMN ${AppTable.NOTIFY} int NOT NULL DEFAULT(1);")
     }
 
     private fun upgradeFrom3to4(db: SQLiteDatabase) {
-        db.execSQL("ALTER TABLE " + AppTable.NAME + " ADD COLUMN " + AppTable.RAN_IN + " int NOT NULL DEFAULT(" + AppEntry.RanIn.UNKNOWN.id + ");")
+        db.execSQL("ALTER TABLE ${AppTable.NAME} ADD COLUMN ${AppTable.RAN_IN} int NOT NULL DEFAULT(" + AppEntry.RanIn.UNKNOWN.id + ");")
     }
 
     companion object {
 
-        private val TAG = DatabaseHelper::class.java.getSimpleName()
+        private val TAG = DatabaseHelper::class.java.simpleName
         val DATABASE_NAME = "apps"
         val DATABASE_VERSION = 4
     }

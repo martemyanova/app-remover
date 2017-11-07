@@ -7,16 +7,14 @@ import com.seppius.i18n.plurals.PluralResources
 import com.vs_unusedappremover.MyApplication
 
 class Plural(private val res: Resources) {
-    private var pluralRes: PluralResources? = null
 
-    init {
+    private val pluralRes: PluralResources? by lazy {
         try {
-            this.pluralRes = PluralResources(res)
+            PluralResources(res)
         } catch (e: Exception) {
             Log.e(MyApplication.TAG, "unable to create plural resources", e)
-            this.pluralRes = null
+            null
         }
-
     }
 
     fun format(pluralResId: Int, quantity: Int, vararg args: Any): String {

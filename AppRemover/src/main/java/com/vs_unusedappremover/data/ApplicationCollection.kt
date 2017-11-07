@@ -2,6 +2,7 @@ package com.vs_unusedappremover.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager.NameNotFoundException
 import android.database.DataSetObserver
 import android.database.sqlite.SQLiteDatabase
@@ -37,7 +38,6 @@ class ApplicationCollection(private val context: Context) {
     fun values(order: Comparator<AppEntry>? = null, filter: (AppEntry) -> Boolean): ArrayList<AppEntry> {
         synchronized(modificationLock) {
             val result = data.values.filter(filter)
-            //result.sortedBy(filter)
             if (order != null) {
                 Collections.sort(result, order)
             }
@@ -88,9 +88,8 @@ class ApplicationCollection(private val context: Context) {
 
             val data = HashMap<String, AppEntry>()
             for (appInfo in pm.getInstalledApplications(0)) {
-                if (Applications.isThirdParty(appInfo)) {
-
-                    var entry: AppEntry? = previousData[appInfo.packageName]
+                if (appInfo.isThirdParty()) {
+                    var entry = previousData[appInfo.packageName]
                     if (entry == null) {
                         entry = AppEntry(info = appInfo,
                                 label = appInfo.packageName,
@@ -108,87 +107,89 @@ class ApplicationCollection(private val context: Context) {
         fireChanged()
     }
 
-    private fun fillFromDbCache(entry: AppEntry) {
-        val dbHelper = app.dbHelper
+    private fun ApplicationInfo.isThirdParty(): Boolean {
+        if (this.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0) return false
+        return this.flags and ApplicationInfo.FLAG_SYSTEM == 0
+    }
 
-        val c = SelectQuery()
+    private fun fillFromDbCache(entry: AppEntry) {
+        SelectQuery()
                 .select(AppTable.TIME_LAST_USED, AppTable.TIME_INSTALLED,
-                        AppTable.DOWLOAD_COUNT, AppTable.RATING,
+                        AppTable.DOWNLOAD_COUNT, AppTable.RATING,
                         AppTable.SIZE, AppTable.NOTIFY, AppTable.RAN_IN)
                 .from(AppTable.NAME)
                 .where(AppTable.PACKAGE + "=?", entry.info.packageName)
-                .execute(dbHelper.readableDatabase)
-
-        try {
-            if (c.moveToFirst()) {
-                entry.lastUsedTime = c.getLong(0)
-                entry.ranIn = AppEntry.RanIn.byId(c.getInt(6))
-                entry.installTime = c.getLong(1)
-                entry.downloadCount = c.getString(2)
-                entry.rating = c.getFloat(3)
-                entry.size = c.getLong(4)
-                entry.notifyAbout = c.getInt(5) != 0
+                .execute(app.dbHelper.readableDatabase).use {
+            if (it.moveToFirst()) {
+                entry.apply {
+                    lastUsedTime = it.getLong(0)
+                    ranIn = AppEntry.RanIn.byId(it.getInt(6))
+                    installTime = it.getLong(1)
+                    downloadCount = it.getString(2)
+                    rating = it.getFloat(3)
+                    size = it.getLong(4)
+                    notifyAbout = it.getInt(5) != 0
+                }
             }
-        } finally {
-            c.close()
         }
     }
 
     private fun saveToCache(entries: Iterable<AppEntry>) {
         val existingApps = existingApps
 
-        val db = app.dbHelper.writableDatabase
-        db.beginTransaction()
-        try {
+        app.dbHelper.writableDatabase.inTransaction {
             val values = ContentValues()
-
             for (entry in entries) {
+                values.apply {
+                    put(AppTable.TIME_INSTALLED, entry.installTime)
+                    put(AppTable.TIME_LAST_USED, entry.lastUsedTime)
+                    put(AppTable.DOWNLOAD_COUNT, entry.downloadCount)
+                    put(AppTable.RATING, entry.rating)
+                    put(AppTable.SIZE, entry.size)
+                    put(AppTable.NOTIFY, entry.notifyAbout)
+                    put(AppTable.RAN_IN, entry.ranIn.id)
 
-                values.put(AppTable.TIME_INSTALLED, entry.installTime)
-                values.put(AppTable.TIME_LAST_USED, entry.lastUsedTime)
-                values.put(AppTable.DOWLOAD_COUNT, entry.downloadCount)
-                values.put(AppTable.RATING, entry.rating)
-                values.put(AppTable.SIZE, entry.size)
-                values.put(AppTable.NOTIFY, entry.notifyAbout)
-                values.put(AppTable.RAN_IN, entry.ranIn.id)
-
-                if (existingApps.contains(entry.info.packageName)) {
-                    db.update(AppTable.NAME, values, AppTable.PACKAGE + "=?", arrayOf(entry.info.packageName))
-                } else {
-                    values.put(AppTable.PACKAGE, entry.info.packageName)
-                    db.insertWithOnConflict(AppTable.NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE)
+                    if (existingApps.contains(entry.info.packageName)) {
+                        update(AppTable.NAME, this, AppTable.PACKAGE + "=?", arrayOf(entry.info.packageName))
+                    } else {
+                        put(AppTable.PACKAGE, entry.info.packageName)
+                        insertWithOnConflict(AppTable.NAME, null, this, SQLiteDatabase.CONFLICT_REPLACE)
+                    }
+                    clear()
                 }
-                values.clear()
             }
-
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
         }
 
         val time = DateFormat.getTimeInstance(DateFormat.SHORT)
 
         Log.i(TAG, " cached " + entries.joinToString(prefix = "[", postfix = "]") { it ->
-            it.info.packageName + "=(" + time.format(Date(it.lastUsedTime)) + ")" })
+            it.info.packageName + "=(" + time.format(Date(it.lastUsedTime)) + ")"
+        })
+    }
+
+    private inline fun SQLiteDatabase.inTransaction(func: SQLiteDatabase.() -> Unit) {
+        beginTransaction()
+        try {
+            func()
+            setTransactionSuccessful()
+        } finally {
+            endTransaction()
+        }
     }
 
     private val existingApps: Set<String>
         get() {
-            val db = app.dbHelper.readableDatabase
-            val c = SelectQuery()
+            SelectQuery()
                     .select(AppTable.PACKAGE)
                     .from(AppTable.NAME)
-                    .execute(db)
-
-            val packages = HashSet<String>(c.columnCount)
-            try {
-                while (c.moveToNext()) {
-                    packages.add(c.getString(0))
-                }
-                return packages
-            } finally {
-                c.close()
-            }
+                    .execute(app.dbHelper.readableDatabase)
+                    .use {
+                        val packages = HashSet<String>(it.columnCount)
+                        while (it.moveToNext()) {
+                            packages.add(it.getString(0))
+                        }
+                        return packages
+                    }
         }
 
     private fun fireChanged() {

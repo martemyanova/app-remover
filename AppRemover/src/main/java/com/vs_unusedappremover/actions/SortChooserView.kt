@@ -42,7 +42,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
     constructor(mContext: Context, provider: SortActionProvider, adapter: SortActionAdapter) : this(mContext) {
         mProvider = provider
         mAdapter = adapter
-        setTextResource(provider.order.shortTextResId)
+        setTextResource(provider.order.shortText)
         this.requestLayout()
     }
 
@@ -192,7 +192,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
 
     private val onPopupDismissed = PopupWindow.OnDismissListener {
         val provider = mProvider ?: return@OnDismissListener
-        setTextResource(provider.order.shortTextResId)
+        setTextResource(provider.order.shortText)
         provider.subUiVisibilityChanged(false)
     }
 }

@@ -5,7 +5,6 @@ import android.support.v4.view.ActionProvider
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.BaseAdapter
 import android.widget.TextView
@@ -60,7 +59,7 @@ class SortActionProvider(context: Context) : ActionProvider(context) {
             val order = getItem(position)
 
             val titleView = resultView.findViewById<TextView>(R.id.title)
-            titleView.setText(order.fullTextResId)
+            titleView.setText(order.fullText)
 
             return resultView
         }

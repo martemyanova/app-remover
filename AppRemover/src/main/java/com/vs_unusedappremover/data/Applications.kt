@@ -1,47 +1,31 @@
 package com.vs_unusedappremover.data
 
-import android.content.pm.ApplicationInfo
-
 import com.vs_unusedappremover.AppEntry
 import com.vs_unusedappremover.MyApplication
 import com.vs_unusedappremover.common.MillisecondsIn
 
 object Applications {
 
-    val UNUSED_INTERVAL_MILLIS = MillisecondsIn.DAY * 7
+    private val UNUSED_INTERVAL_MILLIS = MillisecondsIn.DAY * 7
 
-    enum class Filter {
-        DOWNLOADED {
-            override val create: (entry: AppEntry?) -> Boolean
-                get() = { entry ->
-                val myPackage = MyApplication.instance.packageName
+    enum class Filter(val create: (entry: AppEntry?) -> Boolean) {
+        DOWNLOADED({ entry ->
+            val myPackage = MyApplication.instance.packageName
+            entry != null && myPackage != entry.info.packageName
+        }),
 
-                    entry != null && myPackage != entry.info.packageName
-            }
-        },
-
-        UNUSED {
-            override val create: (entry: AppEntry?) -> Boolean
-                get() = { entry ->
-                    val app = MyApplication.instance
-                    val thisInstallTime = app.installTime
-                    val myPackage = app.packageName
-                    entry != null && isUnused(entry, thisInstallTime) && myPackage != entry.info.packageName
-                }
-        };
-
-        abstract val create: (entry: AppEntry?) -> Boolean
+        UNUSED({ entry ->
+            val myPackage = MyApplication.instance.packageName
+            entry != null && entry.isUnused() && myPackage != entry.info.packageName
+        });
     }
 
-    fun isThirdParty(app: ApplicationInfo): Boolean {
-        if (app.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP != 0) return false
-        return app.flags and ApplicationInfo.FLAG_SYSTEM == 0
-    }
+    private fun AppEntry.isUnused(): Boolean {
+        if (!this.notifyAbout) return false
 
-    private fun isUnused(app: AppEntry, thisAppInstallDate: Long): Boolean {
-        if (!app.notifyAbout) return false
-        var timeUsed = Math.max(app.lastUsedTime, app.installTime)
-        timeUsed = Math.max(timeUsed, thisAppInstallDate)
+        var timeUsed = Math.max(this.lastUsedTime, this.installTime)
+        timeUsed = Math.max(timeUsed, MyApplication.instance.installTime)
+
         return System.currentTimeMillis() - timeUsed > UNUSED_INTERVAL_MILLIS
     }
 }
