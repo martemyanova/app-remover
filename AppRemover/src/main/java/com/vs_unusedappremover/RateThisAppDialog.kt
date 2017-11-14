@@ -1,18 +1,14 @@
 package com.vs_unusedappremover
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
-
 import com.vs_unusedappremover.common.GA
 
 class RateThisAppDialog : DialogFragment() {
@@ -33,7 +29,7 @@ class RateThisAppDialog : DialogFragment() {
         activity.startActivity(playMarketIntent)
 
         val prefs = getPreferences(activity)
-        prefs.edit().putBoolean(IS_RATED, true).commit()
+        prefs.edit().putBoolean(IS_RATED, true).apply()
         GA.event("MainActivity", "Rate application")
     }
 
@@ -43,7 +39,7 @@ class RateThisAppDialog : DialogFragment() {
 
     companion object {
 
-        private val TAG = RateThisAppDialog::class.java.getSimpleName()
+        private val TAG = RateThisAppDialog::class.java.simpleName
         private val SHOW_INTERVAL = 12
         private val REQUEST_COUNT = "num requests"
         private val IS_RATED = "is rated"
@@ -52,7 +48,7 @@ class RateThisAppDialog : DialogFragment() {
             val prefs = getPreferences(context)
 
             val requestCount = prefs.getInt(REQUEST_COUNT, 0) + 1
-            prefs.edit().putInt(REQUEST_COUNT, requestCount).commit()
+            prefs.edit().putInt(REQUEST_COUNT, requestCount).apply()
 
             val isRated = prefs.getBoolean(IS_RATED, false)
             val isTimeToShow = requestCount % SHOW_INTERVAL == 0
@@ -75,13 +71,11 @@ class RateThisAppDialog : DialogFragment() {
             get() {
                 val app = MyApplication.instance
 
-                val uri = Uri.parse("market://details?id=" + app.packageName)
+                val uri = Uri.parse("market://details?id=${app.packageName}")
                 val intent = Intent(Intent.ACTION_VIEW, uri)
 
                 val pm = app.packageManager
-                return if (pm.queryIntentActivities(intent, 0).size == 0) {
-                    null
-                } else intent
+                return if (pm.queryIntentActivities(intent, 0).size == 0) null else intent
             }
 
         private fun getPreferences(context: Context): SharedPreferences =

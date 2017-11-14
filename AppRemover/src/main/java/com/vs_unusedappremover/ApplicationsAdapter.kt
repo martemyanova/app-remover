@@ -29,17 +29,11 @@ class ApplicationsAdapter(private val context: Context) : BaseAdapter() {
         notifyDataSetChanged()
     }
 
-    override fun getCount(): Int {
-        return items.size
-    }
+    override fun getCount(): Int = items.size
 
-    override fun getItem(at: Int): AppEntry {
-        return items[at]
-    }
+    override fun getItem(at: Int): AppEntry = items[at]
 
-    override fun getItemId(at: Int): Long {
-        return at.toLong()
-    }
+    override fun getItemId(at: Int): Long = at.toLong()
 
     override fun getView(index: Int, convertView: View?, parent: ViewGroup): View {
         var resultView = convertView
@@ -50,13 +44,13 @@ class ApplicationsAdapter(private val context: Context) : BaseAdapter() {
         val entry = getItem(index)
         holder.appName.text = entry.label
 
-        MyApplication.instance.picasso()?.load(AppIcon.buildUrl(entry.info.packageName))?.into(holder.appIcon)
+        MyApplication.instance.picasso()?.load(entry.buildUrl())?.into(holder.appIcon)
 
         holder.doNotNotify.visibility = if (entry.notifyAbout) View.INVISIBLE else View.VISIBLE
 
         val sizeStr = if (entry.size != PackageSize.UNKNOWN) Formatter.formatFileSize(context, entry.size) else null
         if (sizeStr != null) {
-            holder.appSize.text = sizeStr
+            holder.appSize.setText(sizeStr)
         } else {
             holder.appSize.setText(R.string.app_size_unknown)
         }
@@ -157,7 +151,7 @@ internal class UnknownUsageTimeFormatter(context: Context) {
 
 internal class ApplicationViewHolder private constructor(context: Context) {
 
-    val rootView: View
+    val rootView: View = View.inflate(context, R.layout.list_item_application, null)
     val appName: TextView
     val appIcon: ImageView
     val appSize: TextView
@@ -165,7 +159,6 @@ internal class ApplicationViewHolder private constructor(context: Context) {
     val doNotNotify: ImageView
 
     init {
-        rootView = View.inflate(context, R.layout.list_item_application, null)
         appName =  rootView.findViewById<TextView>(R.id.app_name)
         appIcon = rootView.findViewById<ImageView>(R.id.app_icon)
         appSize = rootView.findViewById<TextView>(R.id.app_size)

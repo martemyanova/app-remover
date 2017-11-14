@@ -34,6 +34,9 @@ import com.vs_unusedappremover.data.OrderBy
 import net.londatiga.android.ActionItem
 import net.londatiga.android.QuickAction
 
+import android.content.Intent.*
+
+
 class AppsFragment : ListFragment() {
 
     private enum class Actions {
@@ -68,31 +71,32 @@ class AppsFragment : ListFragment() {
         super.onCreate(savedState)
 
         applicationCollection = MyApplication.instance.applications
-        val state = savedState ?: arguments
-        readParameters(state)
+        readParameters(savedState ?: arguments)
 
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return if (isCustomView) {
-            inflater.inflate(R.layout.list_unused, container, false)
-        } else super.onCreateView(inflater, container, savedInstanceState)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            if (isCustomView) {
+                inflater.inflate(R.layout.list_unused, container, false)
+            } else {
+                super.onCreateView(inflater, container, savedInstanceState)
+            }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         adapter = ApplicationsAdapter(activity)
-        val l = listView
-        l.divider = ContextCompat.getDrawable(context, android.R.drawable.divider_horizontal_bright)
-        l.adapter = adapter
-        l.onItemClickListener = onItemClick
+        listView.apply {
+            divider = ContextCompat.getDrawable(context, android.R.drawable.divider_horizontal_bright)
+            adapter = this@AppsFragment.adapter
+            onItemClickListener = onItemClick
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        putParameters(outState, filter, order)
+        outState.putInt(ARG_FILTER, filter.ordinal)
+        outState.putInt(ARG_ORDER, order.ordinal)
     }
 
     override fun onResume() {
@@ -124,25 +128,16 @@ class AppsFragment : ListFragment() {
 
         val share = menu.findItem(R.id.menu_share)
         if (share != null) {
-            val activity = activity
+            val appName = getString(R.string.app_name)
+            val url = "https://play.google.com/store/apps/details?id=${activity.packageName}"
+
             val p = MenuItemCompat.getActionProvider(share) as ShareActionProvider
-
-            val res = activity.resources
-            val appName = res.getString(R.string.app_name)
-
-            val url = "https://play.google.com/store/apps/details?id=" + activity.packageName
-
-            val shareIntent = Intent(android.content.Intent.ACTION_SEND)
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, appName)
-            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, url)
-            p.setShareIntent(shareIntent)
+            p.setShareIntent(Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(EXTRA_SUBJECT, appName)
+                putExtra(EXTRA_TEXT, url)
+            })
         }
-    }
-
-    private fun uninstallPackage(packageName: String) {
-        val packageURI = Uri.parse("package:" + packageName)
-        startActivity(Intent(Intent.ACTION_DELETE, packageURI))
     }
 
     private fun onListItemClick(item: AppEntry, view: View) {
@@ -159,7 +154,7 @@ class AppsFragment : ListFragment() {
         quickAction.addActionItem(ActionItem(
                 Actions.LAUNCH.ordinal,
                 getString(R.string.action_launch),
-                AppIcon.buildUrl(item.info.packageName)))
+                item.buildUrl()))
 
         val openInPlayStoreIntent = getOpenInPlayStoreIntent(pm, item.info.packageName)
         val infos = pm.queryIntentActivities(openInPlayStoreIntent, 0)
@@ -183,39 +178,22 @@ class AppsFragment : ListFragment() {
             when (action) {
                 AppsFragment.Actions.REMOVE -> {
                     uninstallPackage(packageName)
-                    GA.event("Apps", "Uninstall")
                 }
 
                 AppsFragment.Actions.LAUNCH -> {
-                    applicationCollection.notifyUsed(packageName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
-                    val i = pm.getLaunchIntentForPackage(packageName)
-                    try {
-                        startActivity(i)
-                        GA.event("Apps", "Launch application")
-                    } catch (e: Exception) {
-                        Toast.makeText(activity, R.string.toast_cant_launch_app, Toast.LENGTH_SHORT).show()
-                    }
-
+                    launchApp(pm, packageName)
                 }
 
-                AppsFragment.Actions.SEE_IN_PLAY_STORE -> try {
-                    startActivity(Intent.createChooser(openInPlayStoreIntent, getString(R.string.action_launch)))
-                    GA.event("Apps", "Open in Play Market")
-                } catch (e: Exception) {
-                    Toast.makeText(activity, R.string.toast_cant_launch_app, Toast.LENGTH_SHORT).show()
+                AppsFragment.Actions.SEE_IN_PLAY_STORE -> {
+                    showInPlayStore(openInPlayStoreIntent)
                 }
 
                 AppsFragment.Actions.DONT_NOTIFY -> {
-                    val willNotify = !item.notifyAbout
-                    applicationCollection.setNotifyAbout(packageName, willNotify)
-                    GA.event("Apps", "Change notify/not notify")
-                    if (!willNotify) {
-                        Toast.makeText(activity, R.string.toast_dont_notify, Toast.LENGTH_SHORT).show()
-                    }
+                    changeNotify(item, packageName)
                 }
 
                 else -> {
-                    Log.e(TAG, "TODO: Unknown action " + action)
+                    Log.e(TAG, "TODO: Unknown action $action")
                 }
             }
         }
@@ -224,15 +202,50 @@ class AppsFragment : ListFragment() {
         GA.event("Apps", "Show application popup")
     }
 
+    private fun uninstallPackage(packageName: String) {
+        val packageURI = Uri.parse("package: $packageName")
+        startActivity(Intent(Intent.ACTION_DELETE, packageURI))
+        GA.event("Apps", "Uninstall")
+    }
+
+    private fun launchApp(pm: PackageManager, packageName: String) {
+        applicationCollection.notifyUsed(packageName, System.currentTimeMillis(), AppEntry.RanIn.FOREGROUND)
+        val i = pm.getLaunchIntentForPackage(packageName)
+        try {
+            startActivity(i)
+            GA.event("Apps", "Launch application")
+        } catch (e: Exception) {
+            Toast.makeText(activity, R.string.toast_cant_launch_app, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showInPlayStore(openInPlayStoreIntent: Intent) {
+        try {
+            startActivity(Intent.createChooser(openInPlayStoreIntent, getString(R.string.action_launch)))
+            GA.event("Apps", "Open in Play Market")
+        } catch (e: Exception) {
+            Toast.makeText(activity, R.string.toast_cant_launch_app, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun changeNotify(item: AppEntry, packageName: String) {
+        val willNotify = !item.notifyAbout
+        applicationCollection.setNotifyAbout(packageName, willNotify)
+        GA.event("Apps", "Change notify/not notify")
+        if (!willNotify) {
+            Toast.makeText(activity, R.string.toast_dont_notify, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun getOpenInPlayStoreIntent(pm: PackageManager, packageName: String): Intent {
 
-        var playUri = Uri.parse("market://details?id=" + packageName)
+        var playUri = Uri.parse("market://details?id=$packageName")
         val intent = Intent(Intent.ACTION_VIEW, playUri)
 
         val infos = pm.queryIntentActivities(intent, 0)
         if (infos.size > 0) return intent
 
-        playUri = Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)
+        playUri = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
         return Intent(Intent.ACTION_VIEW, playUri)
     }
 
@@ -266,7 +279,7 @@ class AppsFragment : ListFragment() {
         onListItemClick(app, view)
     }
 
-    private val onSortChanged: OnSortSelectedListener = {_, order ->
+    private val onSortChanged: OnSortSelectedListener = { _, order ->
         this@AppsFragment.order = order
         dataObserver.onChanged()
         GA.event("Apps", "Order by", order.toString())
@@ -308,17 +321,13 @@ class AppsFragment : ListFragment() {
         private val ARG_FILTER = "AppsFragment.filter"
         private val ARG_ORDER = "AppsFragment.sort"
 
-        fun create(show: Applications.Filter, order: OrderBy): AppsFragment {
-            val args = Bundle()
-            putParameters(args, show, order)
-            val fragment = AppsFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        fun create(show: Applications.Filter, order: OrderBy): AppsFragment =
+                AppsFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt(ARG_FILTER, show.ordinal)
+                        putInt(ARG_ORDER, order.ordinal)
+                    }
+                }
 
-        private fun putParameters(toBundle: Bundle, show: Applications.Filter, order: OrderBy) {
-            toBundle.putInt(ARG_FILTER, show.ordinal)
-            toBundle.putInt(ARG_ORDER, order.ordinal)
-        }
     }
 }

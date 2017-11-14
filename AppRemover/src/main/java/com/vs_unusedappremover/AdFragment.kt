@@ -13,9 +13,9 @@ import kotlinx.android.synthetic.main.admob_banner.*
 class AdFragment : Fragment() {
 
     @get:JvmName("getView_")
-    private var view: View? = null
+    private lateinit var view: View
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         view = inflater.inflate(R.layout.admob_banner, container, false)
         return view
     }
@@ -35,9 +35,7 @@ class AdFragment : Fragment() {
 
         override fun onAdLoaded() {
             GA.event("Ad", "received ad")
-            if (view != null) {
-                view?.visibility = View.VISIBLE
-            }
+            view.visibility = View.VISIBLE
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.vs_unusedappremover
 
 import android.content.pm.ApplicationInfo
+import android.net.Uri
 
-class AppEntry (var info: ApplicationInfo,
+
+data class AppEntry (var info: ApplicationInfo,
                 var label: String,
                 var size: Long = PackageSize.UNKNOWN,
                 var installTime: Long = 0,
@@ -21,12 +23,17 @@ class AppEntry (var info: ApplicationInfo,
         companion object {
 
             fun byId(id: Int): RanIn {
-                for (v in values()) {
-                    if (v.id == id) return v
-                }
+                values()
+                        .filter { it.id == id }
+                        .forEach { return it }
                 throw IllegalArgumentException("No item with such id")
             }
         }
+    }
+
+    fun buildUrl(): Uri {
+        val packageName: String = info.packageName
+        return Uri.parse(AppIcon.SCHEME + "://" + packageName)
     }
 
     companion object {

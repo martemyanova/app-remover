@@ -52,9 +52,7 @@ class MyApplication : Application() {
             return prefs.getLong(INSTALL_TIME, 0)
         }
 
-    fun picasso(): Picasso? {
-        return picasso
-    }
+    fun picasso(): Picasso? = picasso
 
     private fun checkInstallTimePresent() {
         val prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE)
@@ -67,9 +65,8 @@ class MyApplication : Application() {
 
     private fun calculateInstallTime(): Long {
         val now = System.currentTimeMillis()
-        val pm = packageManager
         try {
-            val info = pm.getApplicationInfo(packageName, 0)
+            val info = packageManager.getApplicationInfo(packageName, 0)
             val apk = File(info.sourceDir)
             val installTime = apk.lastModified()
             return if (installTime != 0L) installTime else now

@@ -26,10 +26,11 @@ class MonitorApplicationsService : Service() {
 
         app = MyApplication.instance
 
-        val filter = IntentFilter()
-        filter.addAction(Intent.ACTION_SCREEN_ON)
-        filter.addAction(Intent.ACTION_SCREEN_OFF)
-        registerReceiver(screenTurnedOnReceiver, filter)
+        IntentFilter().apply() {
+            addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_SCREEN_OFF)
+            registerReceiver(screenTurnedOnReceiver, this)
+        }
 
         val mainThreadHandler = Handler()
         recentAppsTimer = object : HandlerTimer(mainThreadHandler, GET_RECENT_APPS_INTERVAL) {
@@ -65,22 +66,16 @@ class MonitorApplicationsService : Service() {
     }
 
     private fun onScreenStateChanged(isScreenOn: Boolean) {
-        //recentAppsTimer.setEnabled(isScreenOn);
         runningAppTimer.setEnabled(isScreenOn)
     }
 
     private val recentTasks: LinkedList<String>
         get() {
             val activityManager = app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val recentTasks = LinkedList<String>()
 
-            for (task in activityManager.getRecentTasks(50, ActivityManager.RECENT_WITH_EXCLUDED)) {
-                val component = task.baseIntent.component
-                if (component != null) {
-                    recentTasks.add(component.packageName)
-                }
-            }
-            return recentTasks
+            return activityManager.getRecentTasks(50, ActivityManager.RECENT_WITH_EXCLUDED)
+                    .mapNotNull { it.baseIntent.component }
+                    .mapTo(LinkedList()) { it.packageName }
         }
 
     private fun selectRecentUsed(recentTasks: LinkedList<String>): List<String> {
@@ -111,7 +106,7 @@ class MonitorApplicationsService : Service() {
 
     private fun updateRecentUsedApps() {
         val recentUsed = selectRecentUsed(recentTasks)
-        Log.i(TAG, "resent used: " + recentUsed.joinToString(prefix = "[", postfix = "]"))
+        Log.i(TAG, "resent used: ${recentUsed.joinToString(prefix = "[", postfix = "]")}")
         val time = System.currentTimeMillis()
         for (appPackage in recentUsed) {
             app.applications.notifyUsed(appPackage, time, AppEntry.RanIn.FOREGROUND)
@@ -150,7 +145,6 @@ class MonitorApplicationsService : Service() {
         val am = app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val infos = am.getRunningServices(500)
         for (info in infos) {
-
             val appPackage = getPackageFromProcess(info.process)
             val time = fromSysTimeToClock(info.lastActivityTime)
             app.applications.notifyUsed(appPackage, time, AppEntry.RanIn.BACKGROUND)
@@ -172,17 +166,15 @@ class MonitorApplicationsService : Service() {
 
     private val screenTurnedOnReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Log.i(TAG, "screenOnOffReceiver: " + intent.action)
+            Log.i(TAG, "screenOnOffReceiver: ${intent.action}")
 
-            val action = intent.action
-            val isScreenOn = Intent.ACTION_SCREEN_ON == action
+            val isScreenOn = Intent.ACTION_SCREEN_ON == intent.action
             onScreenStateChanged(isScreenOn)
             showNotificationIfNeeded()
         }
     }
 
     companion object {
-
         private val TAG = MonitorApplicationsService::class.java.getSimpleName()
         private val GET_FOREGROUND_APP_INTERVAL = 5 * MillisecondsIn.SECOND
         private val GET_RECENT_APPS_INTERVAL = 30 * MillisecondsIn.SECOND

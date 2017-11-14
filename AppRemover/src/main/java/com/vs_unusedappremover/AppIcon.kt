@@ -1,7 +1,6 @@
 package com.vs_unusedappremover
 
 import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -20,7 +19,7 @@ import java.io.IOException
 
 internal object AppIcon {
 
-    private val SCHEME = "appicon"
+    val SCHEME = "appicon"
     private val TAG = AppIcon.javaClass.simpleName
 
     fun createRequestHandler(context: Context): RequestHandler {
@@ -33,22 +32,17 @@ internal object AppIcon {
             override fun load(request: Request, networkPolicy: Int): RequestHandler.Result {
                 val appPackage = request.uri.authority
                 val packageManager = context.packageManager
-                //val info = packageManager.getApplicationInfo(appPackage, 0)
-                val bitmap = getAppIcon(packageManager, appPackage) //info.loadIcon(packageManager) as BitmapDrawable
+                val bitmap = packageManager.getAppIcon(appPackage)
                 return RequestHandler.Result(bitmap, Picasso.LoadedFrom.DISK)
 
             }
         }
     }
 
-    fun buildUrl(packageName: String): Uri {
-        return Uri.parse(SCHEME + "://" + packageName)
-    }
-
-    fun getAppIcon(packageManager: PackageManager, packageName: String): Bitmap {
+    fun PackageManager.getAppIcon(packageName: String): Bitmap {
 
         try {
-            val drawable = packageManager.getApplicationIcon(packageName)
+            val drawable = this.getApplicationIcon(packageName)
 
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && drawable is AdaptiveIconDrawable) {
                 val layerDrawable = LayerDrawable(arrayOf(drawable.background, drawable.foreground))

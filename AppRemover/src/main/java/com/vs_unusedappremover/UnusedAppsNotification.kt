@@ -1,26 +1,21 @@
 package com.vs_unusedappremover
 
-import com.seppius.i18n.plurals.PluralResources
-import com.vs_unusedappremover.R
-import com.vs_unusedappremover.common.MillisecondsIn
-import com.vs_unusedappremover.data.Plural
-
-import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Resources
 import android.support.v4.app.NotificationCompat
 import android.text.format.Formatter
 import android.util.Log
+import com.vs_unusedappremover.common.MillisecondsIn
+import com.vs_unusedappremover.data.Plural
 
 object UnusedAppsNotification {
 
-    private val TAG = UnusedAppsNotification::class.java.getSimpleName()
+    private val TAG = UnusedAppsNotification::class.java.simpleName
 
-    private val PREFERENCES = UnusedAppsNotification::class.java.getName()
+    private val PREFERENCES = UnusedAppsNotification::class.java.name
     private val SETTING_LAST_SHOWN = "last shown"
     private val SHOW_INTERVAL_MILLIS = MillisecondsIn.HOUR * 36
 
@@ -67,9 +62,9 @@ object UnusedAppsNotification {
 
     fun notifyShown(context: Context) {
         val settings = context.getSharedPreferences(PREFERENCES, 0)
-        val editor = settings.edit()
-        editor.putLong(SETTING_LAST_SHOWN, System.currentTimeMillis())
-        editor.commit()
+        settings.edit()
+                .putLong(SETTING_LAST_SHOWN, System.currentTimeMillis())
+                .apply()
     }
 
     private fun format(res: Resources, formatResId: Int, vararg args: Any): String {

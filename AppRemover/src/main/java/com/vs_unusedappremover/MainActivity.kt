@@ -16,31 +16,22 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private enum class Pages(val titleResId: Int) {
-        DOWNLOADED(R.string.title_downloaded_applications) {
-            override fun createFragment(): Fragment {
-                return AppsFragment.create(Applications.Filter.DOWNLOADED, OrderBy.TIME_UNUSED)
-            }
-        },
+    private enum class Pages(val title: Int, val create: () -> Fragment) {
+        DOWNLOADED(
+                title = R.string.title_downloaded_applications,
+                create = { AppsFragment.create(Applications.Filter.DOWNLOADED, OrderBy.TIME_UNUSED) }),
 
-        UNUSED(R.string.title_unused_applications) {
-            override fun createFragment(): Fragment {
-                return AppsFragment.create(Applications.Filter.UNUSED, OrderBy.SIZE)
-            }
-        };
-
-        abstract fun createFragment(): Fragment
+        UNUSED(
+                title = R.string.title_unused_applications,
+                create = { AppsFragment.create(Applications.Filter.UNUSED, OrderBy.SIZE) });
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-
-        pager.adapter = sectionsPagerAdapter
-        val item = intent.getIntExtra(EXTRA_PAGE, Pages.DOWNLOADED.ordinal)
-        pager.currentItem = item
+        pager.adapter = SectionsPagerAdapter(supportFragmentManager)
+        pager.currentItem = intent.getIntExtra(EXTRA_PAGE, Pages.DOWNLOADED.ordinal)
 
         if (intent.getBooleanExtra(EXTRA_FROM_NOTIFICATION, false)) {
             GA.event("MainActivity", "Start from notification")
@@ -71,17 +62,12 @@ class MainActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        override fun getPageTitle(position: Int): CharSequence {
-            return resources.getString(Pages.values()[position].titleResId)
-        }
+        override fun getPageTitle(position: Int): CharSequence =
+                resources.getString(Pages.values()[position].title)
 
-        override fun getItem(position: Int): Fragment {
-            return Pages.values()[position].createFragment()
-        }
+        override fun getItem(position: Int): Fragment = Pages.values()[position].create()
 
-        override fun getCount(): Int {
-            return Pages.values().size
-        }
+        override fun getCount(): Int = Pages.values().size
     }
 
     companion object {
@@ -89,11 +75,10 @@ class MainActivity : AppCompatActivity() {
         private val EXTRA_PAGE = "page"
         private val EXTRA_FROM_NOTIFICATION = "from notification"
 
-        fun showUnusedFromNotificationIntent(context: Context): Intent {
-            val i = Intent(context, MainActivity::class.java)
-            i.putExtra(EXTRA_PAGE, Pages.UNUSED.ordinal)
-            i.putExtra(EXTRA_FROM_NOTIFICATION, true)
-            return i
-        }
+        fun showUnusedFromNotificationIntent(context: Context): Intent =
+                Intent(context, MainActivity::class.java).apply {
+                    putExtra(EXTRA_PAGE, Pages.UNUSED.ordinal)
+                    putExtra(EXTRA_FROM_NOTIFICATION, true)
+                }
     }
 }
