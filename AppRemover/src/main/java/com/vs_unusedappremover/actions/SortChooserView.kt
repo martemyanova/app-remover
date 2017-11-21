@@ -1,5 +1,6 @@
 package com.vs_unusedappremover.actions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.support.v7.widget.ListPopupWindow
@@ -13,7 +14,6 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.BaseAdapter
 import android.widget.PopupWindow
 import android.widget.TextView
-
 import com.vs_unusedappremover.R
 import com.vs_unusedappremover.actions.SortActionProvider.SortActionAdapter
 import com.vs_unusedappremover.common.GA
@@ -46,6 +46,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
         this.requestLayout()
     }
 
+    @SuppressLint("RestrictedApi")
     private val mOnGlobalLayoutListener = OnGlobalLayoutListener {
         if (isShowingPopup) {
             if (!isShown) {
@@ -95,6 +96,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
         return true
     }
 
+    @SuppressLint("RestrictedApi")
     private fun showPopupUnchecked() {
 
         viewTreeObserver.addOnGlobalLayoutListener(mOnGlobalLayoutListener)
@@ -190,6 +192,7 @@ internal class SortChooserView @JvmOverloads constructor(private val mContext: C
         dismissPopup()
     }
 
+    @SuppressLint("RestrictedApi")
     private val onPopupDismissed = PopupWindow.OnDismissListener {
         val provider = mProvider ?: return@OnDismissListener
         setTextResource(provider.order.shortText)

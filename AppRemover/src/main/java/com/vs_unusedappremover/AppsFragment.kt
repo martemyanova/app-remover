@@ -203,7 +203,7 @@ class AppsFragment : ListFragment() {
     }
 
     private fun uninstallPackage(packageName: String) {
-        val packageURI = Uri.parse("package: $packageName")
+        val packageURI = Uri.parse("package:$packageName")
         startActivity(Intent(Intent.ACTION_DELETE, packageURI))
         GA.event("Apps", "Uninstall")
     }
