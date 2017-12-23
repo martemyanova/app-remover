@@ -1,5 +1,6 @@
 package com.vs_unusedappremover
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.DataSetObserver
@@ -35,6 +36,7 @@ import net.londatiga.android.ActionItem
 import net.londatiga.android.QuickAction
 
 import android.content.Intent.*
+import android.provider.Settings
 
 
 class AppsFragment : ListFragment() {
@@ -43,7 +45,8 @@ class AppsFragment : ListFragment() {
         REMOVE,
         LAUNCH,
         SEE_IN_PLAY_STORE,
-        DONT_NOTIFY
+        DONT_NOTIFY,
+        APP_INFO
     }
 
     lateinit private var adapter: ApplicationsAdapter
@@ -166,10 +169,15 @@ class AppsFragment : ListFragment() {
                     scaleToActionSize(infos[0].loadIcon(pm))))
         }
 
+//        quickAction.addActionItem(ActionItem(
+//                Actions.DONT_NOTIFY.ordinal,
+//                getString(R.string.action_dont_notify),
+//                ContextCompat.getDrawable(activity, R.drawable.ic_do_not_disturb_white_48dp)))
+
         quickAction.addActionItem(ActionItem(
-                Actions.DONT_NOTIFY.ordinal,
-                getString(R.string.action_dont_notify),
-                ContextCompat.getDrawable(activity, R.drawable.ic_do_not_disturb_white_48dp)))
+                Actions.APP_INFO.ordinal,
+                getString(R.string.action_open_app_info),
+                ContextCompat.getDrawable(activity, R.drawable.ic_info_outline_white_48dp)))
 
         quickAction.setOnActionItemClickListener { _, _, actionId ->
             val action = Actions.values()[actionId]
@@ -188,8 +196,12 @@ class AppsFragment : ListFragment() {
                     showInPlayStore(openInPlayStoreIntent)
                 }
 
-                AppsFragment.Actions.DONT_NOTIFY -> {
-                    changeNotify(item, packageName)
+//                AppsFragment.Actions.DONT_NOTIFY -> {
+//                    changeNotify(item, packageName)
+//                }
+
+                AppsFragment.Actions.APP_INFO -> {
+                    showInstalledAppDetails(context, packageName)
                 }
 
                 else -> {
@@ -235,6 +247,13 @@ class AppsFragment : ListFragment() {
         if (!willNotify) {
             Toast.makeText(activity, R.string.toast_dont_notify, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showInstalledAppDetails(context: Context, packageName: String) {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = Uri.fromParts("package", packageName, null)
+        context.startActivity(intent)
     }
 
     private fun getOpenInPlayStoreIntent(pm: PackageManager, packageName: String): Intent {

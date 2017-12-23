@@ -37,7 +37,7 @@
 	<string name="unused_empty_monitoring_apps">Отслеживаю активность приложений, чтобы узнать какие не используются</string>
 	<string name="unused_empty_will_notify">Вы получите нотификацию, когда будут определены неиспользуемые приложения</string>
 	
-	<string name="toast_cant_launch_app">Извини, не получилось запустить приложение</string>
+	<string name="toast_cant_launch_app">Извините, не получилось запустить приложение</string>
 	<string name="toast_dont_notify">Не напоминать об удалении этого приложения</string>
 	
 	<plurals name="application_count">
@@ -79,4 +79,5 @@
     <string name="allow">Разрешить</string>
     <string name="deny">Отмена</string>
     <string name="request_permission">Требуется ваше разрешение, чтобы собирать статистику использования приложений</string>
+    <string name="action_open_app_info">О приложении</string>
 </resources>

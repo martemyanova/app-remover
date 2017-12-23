@@ -16,6 +16,8 @@
     <string name="action_open_in_play_store">Additional\ninfo</string>
 	<!-- Do not notify to remove application from device -->
     <string name="action_dont_notify">Don\'t\nnotify</string>
+	<!-- View application's "App Info" -->
+	<string name="action_open_app_info">App\ninfo</string>
         
 	<!-- Menu header. Order [by something]. See variants below -->
     <string name="order_by">Order</string>

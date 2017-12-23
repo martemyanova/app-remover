@@ -38,7 +38,7 @@ data class AppEntry (var info: ApplicationInfo,
 
     companion object {
         val byLabel = compareBy(AppEntry::label)
-        val bySize = compareBy(AppEntry::size)
+        val bySize = compareByDescending(AppEntry::size)
         val byTimeUnused = Comparator<AppEntry> { e1, e2 ->
             val time1 = Math.max(e1.installTime, e1.lastUsedTime)
             val time2 = Math.max(e2.installTime, e2.lastUsedTime)
