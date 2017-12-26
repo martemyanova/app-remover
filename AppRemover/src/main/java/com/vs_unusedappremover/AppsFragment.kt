@@ -144,8 +144,7 @@ class AppsFragment : ListFragment() {
     }
 
     private fun onListItemClick(item: AppEntry, view: View) {
-        val activity = activity
-        val quickAction = QuickAction(activity, QuickAction.HORIZONTAL)
+        val quickAction = QuickAction(activity, QuickAction.VERTICAL)
 
         val pm = activity.packageManager
 
@@ -169,10 +168,10 @@ class AppsFragment : ListFragment() {
                     scaleToActionSize(infos[0].loadIcon(pm))))
         }
 
-//        quickAction.addActionItem(ActionItem(
-//                Actions.DONT_NOTIFY.ordinal,
-//                getString(R.string.action_dont_notify),
-//                ContextCompat.getDrawable(activity, R.drawable.ic_do_not_disturb_white_48dp)))
+        quickAction.addActionItem(ActionItem(
+                Actions.DONT_NOTIFY.ordinal,
+                getString(R.string.action_dont_notify),
+                ContextCompat.getDrawable(activity, R.drawable.ic_do_not_disturb_white_48dp)))
 
         quickAction.addActionItem(ActionItem(
                 Actions.APP_INFO.ordinal,
@@ -196,9 +195,9 @@ class AppsFragment : ListFragment() {
                     showInPlayStore(openInPlayStoreIntent)
                 }
 
-//                AppsFragment.Actions.DONT_NOTIFY -> {
-//                    changeNotify(item, packageName)
-//                }
+                AppsFragment.Actions.DONT_NOTIFY -> {
+                    changeNotify(item, packageName)
+                }
 
                 AppsFragment.Actions.APP_INFO -> {
                     showInstalledAppDetails(context, packageName)
