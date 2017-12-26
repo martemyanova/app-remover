@@ -1,22 +1,27 @@
 package com.vs_unusedappremover
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatDialogFragment
 import com.vs_unusedappremover.common.GA
 
-class RateThisAppDialog : DialogFragment() {
+class RateThisAppDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = activity
+        val builder: AlertDialog.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AlertDialog.Builder(activity, android.R.style.Theme_Material_Light_Dialog_Alert)
+        } else {
+            AlertDialog.Builder(activity)
+        }
 
-        return AlertDialog.Builder(context)
+        return builder
                 .setMessage(R.string.dialog_rate_this_message)
                 .setCancelable(true)
                 .setPositiveButton(android.R.string.yes) { _, _ -> onYesClicked() }

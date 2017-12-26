@@ -1,30 +1,27 @@
 package com.vs_unusedappremover
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.AppOpsManager
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
 import android.util.Log
 import android.view.Gravity
-import android.view.Window
 import android.view.WindowManager
 
 class RequestPermissionDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder: AlertDialog.Builder
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert)
+        val builder: AlertDialog.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert)
         } else {
-            builder = AlertDialog.Builder(context)
+            AlertDialog.Builder(context)
         }
 
         val d = builder
