@@ -13,11 +13,11 @@
 	<!-- Launch application -->
     <string name="action_launch">Launch</string>
 	<!-- View application description in google play market -->
-    <string name="action_open_in_play_store">Additional\ninfo</string>
+    <string name="action_open_in_play_store">Additional info</string>
 	<!-- Do not notify to remove application from device -->
-    <string name="action_dont_notify">Don\'t\nnotify</string>
+    <string name="action_dont_notify">Don\'t notify</string>
 	<!-- View application's "App Info" -->
-	<string name="action_open_app_info">App\ninfo</string>
+	<string name="action_open_app_info">App info</string>
         
 	<!-- Menu header. Order [by something]. See variants below -->
     <string name="order_by">Order</string>

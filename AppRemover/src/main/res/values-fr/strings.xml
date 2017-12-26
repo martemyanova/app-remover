@@ -8,8 +8,8 @@
     
     <string name="action_remove">Enlever</string>
     <string name="action_launch">Lancer</string>
-    <string name="action_open_in_play_store">Info com-\nplémentaires</string>
-	<string name="action_dont_notify">Ne pas\nnotifier</string>
+    <string name="action_open_in_play_store">Info complémentaires</string>
+	<string name="action_dont_notify">Ne pas notifier</string>
         
     <string name="order_by">Ordre</string>
     <string name="order_by_time_unused_action_bar">par heure</string>
@@ -71,4 +71,5 @@
     <string name="allow">Permettre</string>
     <string name="deny">Nier</string>
     <string name="request_permission">Je ai besoin de votre permission de recueillir des statistiques d\'utilisation des applications</string>
+	<string name="action_open_app_info">Informations application</string>
 </resources>

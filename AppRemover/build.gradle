@@ -27,12 +27,12 @@ android {
         applicationId "com.vs_unusedappremover"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 11
-        versionName "1.5.1"
+        versionCode 12
+        versionName "1.6.0"
     }
 
     signingConfigs {
-        def password = 'yourpass'
+        def password = 'mypass'
         release {
             storeFile file('android-release-key.keystore')
             storePassword password

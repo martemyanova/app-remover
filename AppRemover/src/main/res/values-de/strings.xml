@@ -75,4 +75,5 @@
 	<string name="allow">Erlauben</string>
 	<string name="deny">Verweigern</string>
 	<string name="request_permission">Darf diese Anwendung Nutzungsstatistiken Ihrer Apps sammeln?</string>
+    <string name="action_open_app_info">App-Info</string>
 </resources>
